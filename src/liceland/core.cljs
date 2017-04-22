@@ -2,15 +2,15 @@
   (:require ))
 
 (enable-console-print!)
-
 (println "This text is printed from src/liceland/core.cljs. Go ahead and edit it and see reloading in action.")
 
-;; define your app data so that it doesn't get over-written on reload
+(defonce app (.getElementById js/document "app"))
+(defonce context (.getContext app "2d"))
+(defonce width (.getAttribute app "width"))
+(defonce height (.getAttribute app "width"))
 
-(defonce app-state (atom {:text "Hello world!"}))
+(def image-data (atom (.-data (.getImageData context 0 0 width height))))
+(defonce observer (add-watch image-data :draw #(.putImageData %2 0 0)))
 
 (defn on-js-reload []
-  ;; optionally touch your app-state to force rerendering depending on
-  ;; your application
-  ;; (swap! app-state update-in [:__figwheel_counter] inc)
-)
+  (.log js/console "Reload success!"))

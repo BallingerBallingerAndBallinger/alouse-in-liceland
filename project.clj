@@ -24,13 +24,7 @@
                 ;; the presence of a :figwheel configuration here
                 ;; will cause figwheel to inject the figwheel client
                 ;; into your build
-                :figwheel {:on-jsload "liceland.core/on-js-reload"
-                           ;; :open-urls will pop open your application
-                           ;; in the default browser once Figwheel has
-                           ;; started and complied your application.
-                           ;; Comment this out once it no longer serves you.
-                           :open-urls ["http://localhost:3449/index.html"]}
-
+                :figwheel {:on-jsload "liceland.core/on-js-reload"}
                 :compiler {:main liceland.core
                            :asset-path "js/compiled/out"
                            :output-to "resources/public/js/compiled/liceland.js"

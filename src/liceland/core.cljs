@@ -24,6 +24,7 @@
   (case cursor
     :left  (.setAttribute app "class" "left-cursor")
     :right (.setAttribute app "class" "right-cursor")
+    :norm  (.setAttribute app "class" "norm-cursor")
     (.setAttribute app "class" "")))
 
 (defonce watch-mouse-move
@@ -38,7 +39,7 @@
               (set-cursor :right)
 
               :else
-              (set-cursor :none))))))
+              (set-cursor :norm))))))
 
 (defn draw [draw-fn]
   (let [raw-image-data (.getImageData context 0 0 width height)]

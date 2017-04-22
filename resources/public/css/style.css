@@ -8,4 +8,8 @@
     cursor: url(/images/right.png), auto;
 }
 
+.norm-cursor {
+    cursor: url(/images/norm.png), auto;
+}
+
 

@@ -38,18 +38,25 @@
     (do (draw-fn (-> raw-image-data .-data ta/uint32-view))
         (.putImageData context raw-image-data 0 0))))
 
+(defn text-box-fn [pixels]
+  (doall (map #(aset pixels % 0xff000000) 
+              (range (* width (* 0.8 height)) (* width height)))))
+
+(defn draw-text [text]
+  (draw text-box-fn)
+  (aset context "fillStyle" "#FFFFFF")
+  (aset context "font"  "24px Arial, sans-serif")
+  (.fillText context text 12 (* 0.85 height)))
+
 (defn draw-image [image x y]
   (.drawImage context (sprites/get-loaded image) x y))
 
-;; Make her red to demonstrate functioning
 (defn on-images-loaded []
   (draw #(.fill % 0xfffff0ff))
   (draw-image :hairs 0 0)
-  (draw (fn [pixels]
-          (doall
-           (map #(aset pixels % 0xff000000)
-                (range (* width (* 0.8 height)) (* width height)))))))
+  (draw-text "A vast forest extends to the edge..."))
 
 (defn on-js-reload []
+  (on-images-loaded)
   (.log js/console "Reload success!"))
 

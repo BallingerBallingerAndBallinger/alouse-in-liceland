@@ -1,2 +1,7 @@
 /* some style */
 
+.left-cursor {
+    cursor: url(/images/left.png), auto;
+}
+
+

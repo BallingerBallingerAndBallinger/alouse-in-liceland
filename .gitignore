@@ -1,0 +1,5 @@
+.idea
+resources/public/js
+liceland.iml
+target
+figwheel_server.log

@@ -4,4 +4,8 @@
     cursor: url(/images/left.png), auto;
 }
 
+.right-cursor {
+    cursor: url(/images/right.png), auto;
+}
+
 

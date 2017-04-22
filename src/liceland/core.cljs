@@ -22,15 +22,22 @@
 
 (defn set-cursor [cursor]
   (case cursor
-    :left (.setAttribute app "class" "left-cursor")
+    :left  (.setAttribute app "class" "left-cursor")
+    :right (.setAttribute app "class" "right-cursor")
     (.setAttribute app "class" "")))
 
 (defonce watch-mouse-move
   (aset app "onmousemove"
         (fn [e]
           (this-as element
-            (if (< (- (.-pageX e) (.-offsetLeft element)) (* width 0.2))
+            (cond
+              (< (- (.-pageX e) (.-offsetLeft element)) (* width 0.2))
               (set-cursor :left)
+
+              (> (- (.-pageX e) (.-offsetLeft element)) (* width 0.8))
+              (set-cursor :right)
+
+              :else
               (set-cursor :none))))))
 
 (defn draw [draw-fn]

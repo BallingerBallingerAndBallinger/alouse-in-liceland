@@ -17,6 +17,12 @@
 
 (declare set-scene)
 
+(def mosquito
+  {:sound "/audio/mosquito.mp3"
+   :positionX (* 0.8 width)
+   :positionY (* 0.2 height)
+   :image "/images/mosquito-flit1.png"})
+
 (def scenes
   {:head-west {:background "/images/hairs-low.png"
                :description "Nothing but trees"
@@ -42,16 +48,21 @@
    :head-east {:background "/images/hairs-low.png"
                :forward :heading-on
                :music "/audio/liceland.mp3"
+               :sprites [ mosquito ]
                :right :head-west
                :left :head}})
 
 (defonce current-scene (atom nil))
 
 (def images
-  (map #(:background %) (vals scenes)))
+  (distinct (concat
+             (map #(:image %) (mapcat #(:sprites %) (vals scenes)))
+             (map #(:background %) (vals scenes)))))
 
 (def sounds
-  (filter #(not (nil? %)) (map #(:music %) (vals scenes))))
+  (distinct (concat
+             (map #(:sound %) (mapcat #(:sprites %) (vals scenes)))
+             (remove nil? (map #(:music %) (vals scenes))))))
 
 (declare on-assets-loaded)
 (defonce load-images (go
@@ -122,15 +133,29 @@
 (defn draw-image [image x y]
   (.drawImage context (sprites/get-loaded image) x y))
 
+(defn draw-sprite [sprite]
+  (draw-image (:image sprite) (:positionX sprite) (:positionY sprite))
+  (if (:sound sprite) (sounds/start-loaded-audio-loop (:sound sprite))))
+
+(defn cleanup-sprite [sprite]
+  (if (:sound sprite) (sounds/stop-loaded-audio (:sound sprite))))
+
+(defn cleanup-scene [scene]
+  (if (:sprites scene)
+    (doall (map cleanup-sprite (:sprites scene)))))
+
 (defn draw-scene [scene]
   (if (:music scene)
     (sounds/start-loaded-audio-loop (:music scene)))
   (draw #(.fill % 0xfffff0ff))
   (draw-image (:background scene) 0 0)
+  (if (:sprites scene)
+    (doall (map draw-sprite (:sprites scene))))
   (if (:description scene)
     (draw-text (:description scene))))
 
 (defn set-scene [scene]
+  (cleanup-scene @current-scene)
   (reset! current-scene (scene scenes))
   (draw-scene (scene scenes)))
 

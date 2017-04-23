@@ -36,5 +36,5 @@
     (.play aud)))
 
 (defn stop-loaded-audio [url]
-  (.stop ((symbol url) @audio-cache)))
+  (.pause ((symbol url) @audio-cache)))
 

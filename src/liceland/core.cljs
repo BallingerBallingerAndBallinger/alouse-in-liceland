@@ -13,11 +13,28 @@
 (defonce context (.getContext app "2d"))
 (defonce width (.getAttribute app "width"))
 (defonce height (.getAttribute app "height"))
-(defonce images {:hairs "/images/hairs-low.png"})
+
+(declare set-scene)
+
+(def scenes
+  {:head-west {:background "/images/hairs-low.png"
+               :description "Nothing but trees"
+               :right :head }
+   :head {:background "/images/hairs-low.png"
+          :description "A vast forest stretches as far as the eye can see"
+          :left :head-west
+          :right :head-east }
+   :head-east {:background "/images/hairs-low.png"
+               :left :head}})
+
+(defonce current-scene (atom nil))
+
+(def images
+  (map #(:background %) (vals scenes)))
 
 (declare on-images-loaded)
 (defonce load-images (go
-                       (<! (merge (map (fn[[k v]](sprites/load k v)) (seq images))))
+                       (<! (merge (map sprites/load images)))
                        (on-images-loaded)))
 
 (defn set-cursor [cursor]
@@ -32,14 +49,28 @@
         (fn [e]
           (this-as element
             (cond
-              (< (- (.-pageX e) (.-offsetLeft element)) (* width 0.2))
+              (and (< (- (.-pageX e) (.-offsetLeft element)) (* width 0.2))
+                   (:left @current-scene))
               (set-cursor :left)
 
-              (> (- (.-pageX e) (.-offsetLeft element)) (* width 0.8))
+              (and (> (- (.-pageX e) (.-offsetLeft element)) (* width 0.8))
+                   (:right @current-scene))
               (set-cursor :right)
 
               :else
               (set-cursor :norm))))))
+
+(defonce watch-mouse-down
+  (aset app "onmousedown"
+        (fn [e]
+          (this-as element
+            (cond
+              (and (< (- (.-pageX e) (.-offsetLeft element)) (* width 0.2))
+                   (:left @current-scene))
+              (set-scene (:left @current-scene))
+              (and (> (- (.-pageX e) (.-offsetLeft element)) (* width 0.8))
+                   (:right @current-scene))
+              (set-scene (:right @current-scene)))))))
 
 (defn draw [draw-fn]
   (let [raw-image-data (.getImageData context 0 0 width height)]
@@ -59,10 +90,17 @@
 (defn draw-image [image x y]
   (.drawImage context (sprites/get-loaded image) x y))
 
-(defn on-images-loaded []
+(defn draw-scene [scene]
   (draw #(.fill % 0xfffff0ff))
-  (draw-image :hairs 0 0)
-  (draw-text "A vast forest extends to the edge..."))
+  (draw-image (:background scene) 0 0)
+  (if (:description scene)
+    (draw-text (:description scene))))
+
+(defn set-scene [scene]
+  (reset! current-scene (scene scenes))
+  (draw-scene (scene scenes)))
+
+(defn on-images-loaded [] (set-scene :head))
 
 (defn on-js-reload []
   (on-images-loaded)

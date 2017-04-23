@@ -13,17 +13,18 @@
   (go (>! out (symbol @image-cache))
        (close! out)))
 
-(defn load [symbol url]
-  (let [out (chan)]
-    (.log js/console (str "Loading image for " (name symbol)))
-    (if (symbol @image-cache) (return-image-and-close symbol out)
+(defn load [url]
+  (let [out (chan)
+        sym (symbol url)]
+    (.log js/console (str "Loading image for " (name sym)))
+    (if (sym @image-cache) (return-image-and-close sym out)
         (do
           (let [img (js/Image.)]
-            (aset img "onload" #(do ((cache-image symbol img)
-                                     (return-image-and-close symbol out))))
+            (aset img "onload" #(do ((cache-image sym img)
+                                     (return-image-and-close sym out))))
             (aset img "src" url))))
     out))
 
-(defn get-loaded [symbol]
-  (symbol @image-cache))
+(defn get-loaded [url]
+  ((symbol url) @image-cache))
 

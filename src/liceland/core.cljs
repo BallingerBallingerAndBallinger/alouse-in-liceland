@@ -130,6 +130,50 @@
   (doall (map #(aset pixels % 0xff000000) 
               (range (* width (int (* 0.8 height))) (* width height)))))
 
+(defn rgb-mult [a color]
+  (let [blue  (rem color 0x000100)
+        green (/ (rem (- color blue) 0x010000) 0x000100)
+        red   (/ (- color (* green 0x000100) blue) 0x010000)]
+    (+ (* (int (* a red)) 0x010000)
+       (* (int (* a green)) 0x000100)
+       (int (* a blue)))))
+
+(defn alpha-blend [dst src]
+  (let [dst-a (/ (int (/ dst 0x01000000)) 0xff)
+        src-a (/ (int (/ src 0x01000000)) 0xff)
+        out-a (+ (* (- 1 src-a) dst-a) src-a)]
+    (+  (int (* (* 0xff out-a) 0x1000000))
+        (int (/
+              (+ (rgb-mult src-a (rem src 0x01000000))
+                 (rgb-mult (* dst-a (- 1 src-a)) (rem dst 0x01000000)))
+              out-a)))))
+
+(defn color-pixel-fn [pixels x y color]
+  (let [dest (aget pixels (int (+ x (* width y))))]
+    (if (and (> x 0) (> y 0) (< x width) (< y height))
+      (aset pixels (+ x (* width y)) (alpha-blend dest color)))))
+
+(defn compute-source-pixel [img scale idx]
+  (cond
+    (= 1 scale) idx
+    :default (let [row (/ idx (* scale (:width img)))
+                   col (int (rem idx (* scale (:width img))))
+                   source-row (int (/ row scale))
+                   source-col (int (/ col scale))]
+               (+ source-col (* source-row (:width img))))))
+
+(defn splat-fn [pixels x y s image]
+  (let [img (sprites/get-image-data image)
+        img-pixels (:data img)
+        w (* s (:width img))
+        h (* s (:height img))
+        row #(int (/ % w))]
+    (doall (map #(color-pixel-fn pixels
+                                 (+ x (rem % w))
+                                 (+ y (row %))
+                                 (aget img-pixels (compute-source-pixel img s %)))
+                (range (* w h))))))
+
 (defn draw-letter [index letter]
   (case letter
     (.fillText context letter (* (+ 2 index) 4) (* 0.92 height))))
@@ -148,9 +192,7 @@
     (.drawImage context img x y (* s (.-width img)) (* s (.-height img)))))
 
 (defn draw-sprite [sprite]
-  (if (:scale sprite)
-    (draw-scaled-image (:image sprite) (:positionX sprite) (:positionY sprite) (:scale sprite))
-    (draw-image (:image sprite) (:positionX sprite) (:positionY sprite)))
+  (draw #(splat-fn % (int (:positionX sprite)) (int (:positionY sprite)) (or (:scale sprite) 1) (:image sprite)))
   (if (:sound sprite) (sounds/start-loaded-audio-loop (:sound sprite))))
 
 (defn cleanup-sprite [sprite]

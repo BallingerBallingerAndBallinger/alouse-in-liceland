@@ -118,7 +118,7 @@
    :head-east {:background "/images/scalp-new.png"
                :forward :heading-on
                :music "/audio/liceland.mp3"
-               :sprites [ (clickable mosquito :heading-on) ]
+               :sprites [ trees (clickable mosquito :heading-on) ]
                :right :head-west
                :left :head}})
 

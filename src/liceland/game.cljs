@@ -67,47 +67,47 @@
          (forest state)))
 
 (defn forest [state]
-  {:head-west {:background "/images/hairs-low.png"
+  {:head-west {:background "/images/scalp-new.png"
                :description "Nothing but trees"
                :music "/audio/liceland.mp3"
                :forward :clearing
                :right :head
                :left :head-east }
-   :clearing {:background "/images/hairs-low.png"
+   :clearing {:background "/images/scalp-new.png"
               :description "A nice little clearing"
               :sprites (if (not (:axe state)) [(clickable axe :get-axe)])
               :music "/audio/liceland.mp3"
               :back :head-west }
-   :get-axe {:background "/images/hairs-low.png"
+   :get-axe {:background "/images/scalp-new.png"
              :description "Still sharp"
              :music "/audio/liceland.mp3"
              :update #(assoc % :axe true)
              :back :head-west}
-   :head {:background "/images/hairs-low.png"
+   :head {:background "/images/scalp-new.png"
           :description "A vast forest stretches as far as the eye can see"
           :music "/audio/liceland.mp3"
           :left :head-west
           :right :head-east }
-   :heading-on {:background "/images/hairs-low.png"
+   :heading-on {:background "/images/scalp-new.png"
                 :forward :heading-on-2
                 :back :head-east
                 :sprites [ (clickable larger-mosquito :heading-on-2) ]
                 :music "/audio/liceland.mp3"
                 :description "It just keeps going"}
-   :heading-on-2 {:background "/images/hairs-low.png"
+   :heading-on-2 {:background "/images/scalp-new.png"
                   :forward :heading-on-3
                   :back :heading-on
                   :music "/audio/liceland.mp3"
                   :sprites [ (if (not (:talked-to-mosq state))
                                (clickable largest-mosquito :lookin-at-me)
                                (clickable largest-mosquito :not-lookin-at-me))]}
-   :heading-on-3 {:background "/images/hairs-low.png"
+   :heading-on-3 {:background "/images/scalp-new.png"
                   :description "You've lost your way in the immensity"
                   :back    :head-east
                   :left    :head-east
                   :right   :head-east
                   :forward :head-east }
-   :head-east {:background "/images/hairs-low.png"
+   :head-east {:background "/images/scalp-new.png"
                :forward :heading-on
                :music "/audio/liceland.mp3"
                :sprites [ (clickable mosquito :heading-on) ]
@@ -120,7 +120,7 @@
                              :left :heading-on-3
                              :back :heading-on
                              :music "/audio/liceland.mp3"
-                             :background "/images/hairs-low.png"})]
+                             :background "/images/scalp-new.png"})]
 
     {:lookin-at-me (base {:sprites [ (clickable largest-mosquito :lookin-at-me-2) ]
                           :description "\"Oh, another one\""})

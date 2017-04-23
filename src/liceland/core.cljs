@@ -3,7 +3,7 @@
    [cljs.core.async.macros :refer [go]])
   (:require
    [liceland.sprites :as sprites]
-   [liceland.sounds :as sounds]
+   [liceland.audio :as sounds]
    [liceland.game :refer [scenes]]
    [cljs.core.async :refer [<! merge]]
    [thi.ng.typedarrays.core :as ta]))

@@ -41,6 +41,11 @@
    :positionY (* 0.65 height)
    :image "/images/axe.png"})
 
+(def trees
+  {:positionX 0
+   :positionY 0
+   :image "/images/trees1.png"})
+
 ;; Scenes permit the following properties
 ;; background:  URL of a background for the scene
 ;; description: Text that appears beneath a scene
@@ -70,6 +75,7 @@
   {:head-west {:background "/images/scalp-new.png"
                :description "Nothing but trees"
                :music "/audio/liceland.mp3"
+               :sprites [ trees ]
                :forward :clearing
                :right :head
                :left :head-east }
@@ -86,26 +92,28 @@
    :head {:background "/images/scalp-new.png"
           :description "A vast forest stretches as far as the eye can see"
           :music "/audio/liceland.mp3"
+          :sprites [ trees ]
           :left :head-west
           :right :head-east }
    :heading-on {:background "/images/scalp-new.png"
                 :forward :heading-on-2
                 :back :head-east
-                :sprites [ (clickable larger-mosquito :heading-on-2) ]
+                :sprites [ trees (clickable larger-mosquito :heading-on-2) ]
                 :music "/audio/liceland.mp3"
                 :description "It just keeps going"}
    :heading-on-2 {:background "/images/scalp-new.png"
                   :forward :heading-on-3
                   :back :heading-on
                   :music "/audio/liceland.mp3"
-                  :sprites [ (if (not (:talked-to-mosq state))
-                               (clickable largest-mosquito :lookin-at-me)
-                               (clickable largest-mosquito :not-lookin-at-me))]}
+                  :sprites [ trees (if (not (:talked-to-mosq state))
+                                     (clickable largest-mosquito :lookin-at-me)
+                                     (clickable largest-mosquito :not-lookin-at-me))]}
    :heading-on-3 {:background "/images/scalp-new.png"
                   :description "You've lost your way in the immensity"
                   :back    :head-east
                   :left    :head-east
                   :right   :head-east
+                  :sprites [ trees ]
                   :forward :head-east }
    :head-east {:background "/images/scalp-new.png"
                :forward :heading-on
@@ -122,13 +130,13 @@
                              :music "/audio/liceland.mp3"
                              :background "/images/scalp-new.png"})]
 
-    {:lookin-at-me (base {:sprites [ (clickable largest-mosquito :lookin-at-me-2) ]
+    {:lookin-at-me (base {:sprites [ trees (clickable largest-mosquito :lookin-at-me-2) ]
                           :description "\"Oh, another one\""})
 
-     :not-lookin-at-me (base {:sprites [ (clickable largest-mosquito :heading-on-2) ]
+     :not-lookin-at-me (base {:sprites [ trees (clickable largest-mosquito :heading-on-2) ]
                               :description "\"...\""})
 
-     :lookin-at-me-2 (base {:sprites [ (clickable largest-mosquito :heading-on-2) ]
+     :lookin-at-me-2 (base {:sprites [ trees (clickable largest-mosquito :heading-on-2) ]
                             :update #(assoc % :talked-to-mosq true)
                             :description "\"You're just like all the others\""})}))
 

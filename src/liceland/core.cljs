@@ -131,12 +131,13 @@
               (range (* width (int (* 0.8 height))) (* width height)))))
 
 (defn draw-letter [index letter]
-  (.fillText context letter (* (+ 2 index) 4) (* 0.92 height)))
+  (case letter
+    (.fillText context letter (* (+ 2 index) 4) (* 0.92 height))))
 
 (defn draw-text [text]
   (draw text-box-fn)
   (aset context "fillStyle" "#FFFFFF")
-  (aset context "font"  "9px monospace")
+  (aset context "font"  "9px \"Lucida Console\", Monaco, monospace")
   (doall (map-indexed draw-letter text)))
 
 (defn draw-image [image x y]

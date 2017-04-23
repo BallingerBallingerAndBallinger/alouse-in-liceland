@@ -20,8 +20,20 @@
 (def mosquito
   {:sound "/audio/mosquito.mp3"
    :positionX (* 0.7 width)
-   :positionY (* 0.4 height)
+   :positionY (* 0.34 height)
    :image "/images/mosquito-flit1.png"})
+
+(def larger-mosquito
+  (cljs.core/merge mosquito
+         {:positionX (* 0.4 width)
+          :positionY (* 0.265 height)
+          :scale 2 }))
+
+(def largest-mosquito
+  (cljs.core/merge mosquito
+         {:positionX (* 0.1 width)
+          :positionY (* -0.2 width)
+          :scale 16}))
 
 (def scenes
   {:head-west {:background "/images/hairs-low.png"
@@ -36,11 +48,13 @@
           :right :head-east }
    :heading-on {:background "/images/hairs-low.png"
                 :forward :heading-on-2
+                :sprites [ larger-mosquito ]
                 :music "/audio/liceland.mp3"
                 :description "It just keeps going"}
    :heading-on-2 {:background "/images/hairs-low.png"
                   :forward :heading-on-3
                   :music "/audio/liceland.mp3"
+                  :sprites [ largest-mosquito ]
                   :description "Is there no end?"}
    :heading-on-3 {:background "/images/hairs-low.png"
                   :description "You've lost your way in the immensity"
@@ -134,8 +148,14 @@
 (defn draw-image [image x y]
   (.drawImage context (sprites/get-loaded image) x y))
 
+(defn draw-scaled-image [image x y s]
+  (let [img (sprites/get-loaded image)]
+    (.drawImage context img x y (* s (.-width img)) (* s (.-height img)))))
+
 (defn draw-sprite [sprite]
-  (draw-image (:image sprite) (:positionX sprite) (:positionY sprite))
+  (if (:scale sprite)
+    (draw-scaled-image (:image sprite) (:positionX sprite) (:positionY sprite) (:scale sprite))
+    (draw-image (:image sprite) (:positionX sprite) (:positionY sprite)))
   (if (:sound sprite) (sounds/start-loaded-audio-loop (:sound sprite))))
 
 (defn cleanup-sprite [sprite]

@@ -17,6 +17,9 @@
 
 (declare set-scene)
 
+(defn clickable [sprite target]
+  (cljs.core/merge sprite {:click target}))
+
 (def mosquito
   {:sound "/audio/mosquito.mp3"
    :positionX (* 0.7 width)
@@ -48,21 +51,26 @@
           :right :head-east }
    :heading-on {:background "/images/hairs-low.png"
                 :forward :heading-on-2
-                :sprites [ larger-mosquito ]
+                :sprites [ (clickable larger-mosquito :heading-on-2) ]
                 :music "/audio/liceland.mp3"
                 :description "It just keeps going"}
    :heading-on-2 {:background "/images/hairs-low.png"
                   :forward :heading-on-3
                   :music "/audio/liceland.mp3"
-                  :sprites [ largest-mosquito ]
+                  :sprites [ (clickable largest-mosquito :lookin-at-me) ]
                   :description "Is there no end?"}
+   :lookin-at-me {:background "/images/hairs-low.png"
+                  :forward :heading-on-3
+                  :music "/audio/liceland.mp3"
+                  :sprites [ (clickable largest-mosquito :heading-on-2) ]
+                  :description "You lookin' at me?"}
    :heading-on-3 {:background "/images/hairs-low.png"
                   :description "You've lost your way in the immensity"
                   :forward :head-east }
    :head-east {:background "/images/hairs-low.png"
                :forward :heading-on
                :music "/audio/liceland.mp3"
-               :sprites [ mosquito ]
+               :sprites [ (clickable mosquito :heading-on) ]
                :right :head-west
                :left :head}})
 
@@ -90,45 +98,73 @@
     :left    (.setAttribute app "class" "left-cursor")
     :right   (.setAttribute app "class" "right-cursor")
     :forward (.setAttribute app "class" "forward-cursor")
+    :click   (.setAttribute app "class" "click-cursor")
     :norm    (.setAttribute app "class" "norm-cursor")
     (.setAttribute app "class" "")))
+
+(defn clicked-sprite [sprite x y]
+  (.log js/console "Click!")
+  (let [img (sprites/get-loaded (:image sprite))
+        width (* (or (:scale sprite) 1) (.-width img))
+        height (* (or (:scale sprite) 1) (.-height img))
+        right (+ (:positionX sprite) width)
+        bottom (+ (:positionY sprite) height)]
+    (if (and (> x (:positionX sprite))
+             (< x right)
+             (> y (:positionY sprite))
+             (< y bottom)) (:click sprite) nil)))
+
+(defn clicked-sprite-in-scene [scene x y]
+  (first (filter #(clicked-sprite % x y) (:sprites scene))))
 
 (defonce watch-mouse-move
   (aset app "onmousemove"
         (fn [e]
           (this-as element
-            (cond
-              (and (< (- (.-pageX e) (.-offsetLeft element)) (* width 0.2))
-                   (:left @current-scene))
-              (set-cursor :left)
-             
-              (and (> (- (.-pageX e) (.-offsetLeft element)) (* width 0.8))
-                   (:right @current-scene))
-              (set-cursor :right)
+            (let [x (- (.-pageX e) (.-offsetLeft element))
+                  y (- (.-pageY e) (.-offsetTop element))
+                  sprite (clicked-sprite-in-scene @current-scene x y)]
+              (cond
+                (and (< x (* width 0.2))
+                     (:left @current-scene))
+                (set-cursor :left)
+                
+                (and (> x (* width 0.8))
+                     (:right @current-scene))
+                (set-cursor :right)
 
-              (and (< (- (.-pageY e) (.-offsetTop element)) (* height 0.2))
-                   (:forward @current-scene))
-              (set-cursor :forward)
-              
-              :else
-              (set-cursor :norm))))))
+                (and (< y (* height 0.2))
+                     (:forward @current-scene))
+                (set-cursor :forward)
+
+                (and sprite (:click sprite))
+                (set-cursor :click)
+
+                :else
+                (set-cursor :norm)))))))
 
 (defonce watch-mouse-down
   (aset app "onmousedown"
         (fn [e]
           (this-as element
+            (let [x (- (.-pageX e) (.-offsetLeft element))
+                  y (- (.-pageY e) (.-offsetTop element))
+                  sprite (clicked-sprite-in-scene @current-scene x y)]
             (cond
-              (and (< (- (.-pageX e) (.-offsetLeft element)) (* width 0.2))
+              (and (< x (* width 0.2))
                    (:left @current-scene))
               (set-scene (:left @current-scene))
 
-              (and (< (- (.-pageY e) (.-offsetTop element)) (* height 0.2))
+              (and (< y (* height 0.2))
                    (:forward @current-scene))
               (set-scene (:forward @current-scene))
               
-              (and (> (- (.-pageX e) (.-offsetLeft element)) (* width 0.8))
+              (and (> x (* width 0.8))
                    (:right @current-scene))
-              (set-scene (:right @current-scene)))))))
+              (set-scene (:right @current-scene))
+
+              (and sprite (:click sprite))
+              (set-scene (:click sprite))))))))
 
 (defn draw [draw-fn]
   (let [raw-image-data (.getImageData context 0 0 width height)]

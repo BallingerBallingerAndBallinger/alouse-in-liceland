@@ -16,4 +16,7 @@
     cursor: url(/images/forward.png), auto;
 }
 
+.click-cursor {
+    cursor: url(/images/click.png), auto;
+}
 

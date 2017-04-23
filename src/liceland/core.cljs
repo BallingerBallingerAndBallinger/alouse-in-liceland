@@ -21,7 +21,8 @@
   {:head-west {:background "/images/hairs-low.png"
                :description "Nothing but trees"
                :music "/audio/liceland.mp3"
-               :right :head }
+               :right :head
+               :left :head-east }
    :head {:background "/images/hairs-low.png"
           :description "A vast forest stretches as far as the eye can see"
           :music "/audio/liceland.mp3"
@@ -37,10 +38,11 @@
                   :description "Is there no end?"}
    :heading-on-3 {:background "/images/hairs-low.png"
                   :description "You've lost your way in the immensity"
-                  :forward :head-east}
+                  :forward :head-east }
    :head-east {:background "/images/hairs-low.png"
                :forward :heading-on
                :music "/audio/liceland.mp3"
+               :right :head-west
                :left :head}})
 
 (defonce current-scene (atom nil))

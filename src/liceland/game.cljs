@@ -1,4 +1,4 @@
-(ns liceland.core)
+(ns liceland.game)
 
 (defonce app (.getElementById js/document "app"))
 (defonce width (.getAttribute app "width"))
@@ -15,17 +15,17 @@
 
 (def larger-mosquito
   (cljs.core/merge mosquito
-         {:positionX (* 0.4 width)
-          :positionY (* 0.265 height)
-          :scale 2 }))
+                   {:positionX (* 0.4 width)
+                    :positionY (* 0.265 height)
+                    :scale 2 }))
 
 (def largest-mosquito
   (cljs.core/merge mosquito
-         {:positionX (* 0.1 width)
-          :positionY (* -0.2 width)
-          :scale 16}))
+                   {:positionX (* 0.1 width)
+                    :positionY (* -0.2 width)
+                    :scale 16}))
 
-(def scenes
+(defn scenes [state]
   {:head-west {:background "/images/hairs-low.png"
                :description "Nothing but trees"
                :music "/audio/liceland.mp3"
@@ -44,17 +44,25 @@
    :heading-on-2 {:background "/images/hairs-low.png"
                   :forward :heading-on-3
                   :music "/audio/liceland.mp3"
-                  :sprites [ (clickable largest-mosquito :lookin-at-me) ]}
+                  :sprites [ (if (not (:talked-to-mosq state))
+                               (clickable largest-mosquito :lookin-at-me)
+                               (clickable largest-mosquito :not-lookin-at-me))]}
    :lookin-at-me {:background "/images/hairs-low.png"
                   :forward :heading-on-3
                   :music "/audio/liceland.mp3"
                   :sprites [ (clickable largest-mosquito :lookin-at-me-2) ]
                   :description "\"Oh, another one\""}
+   :not-lookin-at-me {:background "/images/hairs-low.png"
+                      :forward :heading-on-3
+                      :music "/audio/liceland.mp3"
+                      :sprites [ (clickable largest-mosquito :heading-on-2) ]
+                      :description "\"...\""}
    :lookin-at-me-2 {:background "/images/hairs-low.png"
-                  :forward :heading-on-3
-                  :music "/audio/liceland.mp3"
-                  :sprites [ (clickable largest-mosquito :heading-on-2) ]
-                  :description "\"You're just like all the others\""}
+                    :forward :heading-on-3
+                    :music "/audio/liceland.mp3"
+                    :sprites [ (clickable largest-mosquito :heading-on-2) ]
+                    :update #(assoc % :talked-to-mosq true)
+                    :description "\"You're just like all the others\""}
    :heading-on-3 {:background "/images/hairs-low.png"
                   :description "You've lost your way in the immensity"
                   :forward :head-east }

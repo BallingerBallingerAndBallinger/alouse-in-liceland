@@ -20,16 +20,17 @@
 
 (defonce current-scene (atom nil))
 (defonce current-scene-tag (atom nil))
+(defonce current-state (atom {}))
 
 (def images
   (distinct (concat
-             (map #(:image %) (mapcat #(:sprites %) (vals scenes)))
-             (map #(:background %) (vals scenes)))))
+             (map #(:image %) (mapcat #(:sprites %) (vals (scenes @current-state))))
+             (map #(:background %) (vals (scenes @current-state))))))
 
 (def sounds
   (distinct (concat
-             (map #(:sound %) (mapcat #(:sprites %) (vals scenes)))
-             (remove nil? (map #(:music %) (vals scenes))))))
+             (map #(:sound %) (mapcat #(:sprites %) (vals (scenes @current-state))))
+             (remove nil? (map #(:music %) (vals (scenes @current-state)))))))
 
 (declare on-assets-loaded)
 (defonce load-images (go
@@ -142,9 +143,10 @@
 
 (defn cleanup-scene [scene]
   (if (:sprites scene)
-    (doall (map cleanup-sprite (:sprites scene))))
+    (doall (map cleanup-sprite (:sprites scene)))))
 
 (defn draw-scene [scene]
+  (if (:update scene) (swap! current-state (:update scene)))
   (if (:music scene)
     (sounds/start-loaded-audio-loop (:music scene)))
   (draw #(.fill % 0xfffff0ff))
@@ -157,8 +159,8 @@
 (defn set-scene [scene]
   (if @current-scene (cleanup-scene @current-scene))
   (reset! current-scene-tag scene)
-  (reset! current-scene (scene scenes))
-  (draw-scene (scene scenes)))
+  (reset! current-scene (scene (scenes @current-state))
+  (draw-scene (scene (scenes @current-state)))))
 
 (defn on-assets-loaded []
   (if (nil? @current-scene)

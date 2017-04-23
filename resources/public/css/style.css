@@ -1,2 +1,15 @@
 /* some style */
 
+.left-cursor {
+    cursor: url(/images/left.png), auto;
+}
+
+.right-cursor {
+    cursor: url(/images/right.png), auto;
+}
+
+.norm-cursor {
+    cursor: url(/images/norm.png), auto;
+}
+
+

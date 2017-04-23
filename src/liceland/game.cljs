@@ -17,6 +17,11 @@
 (defn clickable [sprite target]
   (cljs.core/merge sprite {:click target}))
 
+(def demonwig
+  {:positionX (* 0.3 width)
+   :positionY (* 0.1 height)
+   :image "/images/earwig.png"})
+
 (def mosquito
   {:sound "/audio/mosquito.mp3"
    :positionX (* 0.7 width)
@@ -75,7 +80,7 @@
   {:head-west {:background "/images/scalp-new.png"
                :description "Nothing but trees"
                :music "/audio/liceland.mp3"
-               :sprites [ trees ]
+               :sprites [ demonwig trees ]
                :forward :clearing
                :right :head
                :left :head-east }

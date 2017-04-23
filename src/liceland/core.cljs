@@ -4,6 +4,7 @@
   (:require
    [liceland.sprites :as sprites]
    [liceland.sounds :as sounds]
+   [liceland.game :refer [scenes]]
    [cljs.core.async :refer [<! merge]]
    [thi.ng.typedarrays.core :as ta]))
 
@@ -16,63 +17,6 @@
 (defonce height (.getAttribute app "height"))
 
 (declare set-scene)
-
-(defn clickable [sprite target]
-  (cljs.core/merge sprite {:click target}))
-
-(def mosquito
-  {:sound "/audio/mosquito.mp3"
-   :positionX (* 0.7 width)
-   :positionY (* 0.34 height)
-   :image "/images/mosquito-flit1.png"})
-
-(def larger-mosquito
-  (cljs.core/merge mosquito
-         {:positionX (* 0.4 width)
-          :positionY (* 0.265 height)
-          :scale 2 }))
-
-(def largest-mosquito
-  (cljs.core/merge mosquito
-         {:positionX (* 0.1 width)
-          :positionY (* -0.2 width)
-          :scale 16}))
-
-(def scenes
-  {:head-west {:background "/images/hairs-low.png"
-               :description "Nothing but trees"
-               :music "/audio/liceland.mp3"
-               :right :head
-               :left :head-east }
-   :head {:background "/images/hairs-low.png"
-          :description "A vast forest stretches as far as the eye can see"
-          :music "/audio/liceland.mp3"
-          :left :head-west
-          :right :head-east }
-   :heading-on {:background "/images/hairs-low.png"
-                :forward :heading-on-2
-                :sprites [ (clickable larger-mosquito :heading-on-2) ]
-                :music "/audio/liceland.mp3"
-                :description "It just keeps going"}
-   :heading-on-2 {:background "/images/hairs-low.png"
-                  :forward :heading-on-3
-                  :music "/audio/liceland.mp3"
-                  :sprites [ (clickable largest-mosquito :lookin-at-me) ]
-                  :description "Is there no end?"}
-   :lookin-at-me {:background "/images/hairs-low.png"
-                  :forward :heading-on-3
-                  :music "/audio/liceland.mp3"
-                  :sprites [ (clickable largest-mosquito :heading-on-2) ]
-                  :description "You lookin' at me?"}
-   :heading-on-3 {:background "/images/hairs-low.png"
-                  :description "You've lost your way in the immensity"
-                  :forward :head-east }
-   :head-east {:background "/images/hairs-low.png"
-               :forward :heading-on
-               :music "/audio/liceland.mp3"
-               :sprites [ (clickable mosquito :heading-on) ]
-               :right :head-west
-               :left :head}})
 
 (defonce current-scene (atom nil))
 (defonce current-scene-tag (atom nil))
@@ -103,7 +47,6 @@
     (.setAttribute app "class" "")))
 
 (defn clicked-sprite [sprite x y]
-  (.log js/console "Click!")
   (let [img (sprites/get-loaded (:image sprite))
         width (* (or (:scale sprite) 1) (.-width img))
         height (* (or (:scale sprite) 1) (.-height img))
@@ -199,7 +142,7 @@
 
 (defn cleanup-scene [scene]
   (if (:sprites scene)
-    (doall (map cleanup-sprite (:sprites scene)))))
+    (doall (map cleanup-sprite (:sprites scene))))
 
 (defn draw-scene [scene]
   (if (:music scene)

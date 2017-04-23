@@ -3,6 +3,7 @@
 (defonce app (.getElementById js/document "app"))
 (defonce width (.getAttribute app "width"))
 (defonce height (.getAttribute app "height"))
+(declare mosquito-dialog)
 
 (defn clickable [sprite target]
   (cljs.core/merge sprite {:click target}))
@@ -26,28 +27,40 @@
                     :scale 16}))
 
 (defn scenes [state]
-  {:head-west {:background "/images/hairs-low.png"
-               :description "Nothing but trees"
-               :music "/audio/liceland.mp3"
-               :right :head
-               :left :head-east }
-   :head {:background "/images/hairs-low.png"
-          :description "A vast forest stretches as far as the eye can see"
-          :music "/audio/liceland.mp3"
-          :left :head-west
-          :right :head-east }
-   :heading-on {:background "/images/hairs-low.png"
-                :forward :heading-on-2
-                :sprites [ (clickable larger-mosquito :heading-on-2) ]
-                :music "/audio/liceland.mp3"
-                :description "It just keeps going"}
-   :heading-on-2 {:background "/images/hairs-low.png"
-                  :forward :heading-on-3
-                  :music "/audio/liceland.mp3"
-                  :sprites [ (if (not (:talked-to-mosq state))
-                               (clickable largest-mosquito :lookin-at-me)
-                               (clickable largest-mosquito :not-lookin-at-me))]}
-   :lookin-at-me {:background "/images/hairs-low.png"
+  (merge (mosquito-dialog state)
+         {:head-west {:background "/images/hairs-low.png"
+                      :description "Nothing but trees"
+                      :music "/audio/liceland.mp3"
+                      :right :head
+                      :left :head-east }
+          :head {:background "/images/hairs-low.png"
+                 :description "A vast forest stretches as far as the eye can see"
+                 :music "/audio/liceland.mp3"
+                 :left :head-west
+                 :right :head-east }
+          :heading-on {:background "/images/hairs-low.png"
+                       :forward :heading-on-2
+                       :sprites [ (clickable larger-mosquito :heading-on-2) ]
+                       :music "/audio/liceland.mp3"
+                       :description "It just keeps going"}
+          :heading-on-2 {:background "/images/hairs-low.png"
+                         :forward :heading-on-3
+                         :music "/audio/liceland.mp3"
+                         :sprites [ (if (not (:talked-to-mosq state))
+                                      (clickable largest-mosquito :lookin-at-me)
+                                      (clickable largest-mosquito :not-lookin-at-me))]}
+          :heading-on-3 {:background "/images/hairs-low.png"
+                         :description "You've lost your way in the immensity"
+                         :forward :head-east }
+          :head-east {:background "/images/hairs-low.png"
+                      :forward :heading-on
+                      :music "/audio/liceland.mp3"
+                      :sprites [ (clickable mosquito :heading-on) ]
+                      :right :head-west
+                      :left :head}}))
+
+(defn mosquito-dialog [state]
+  {:lookin-at-me {:background "/images/hairs-low.png"
                   :forward :heading-on-3
                   :music "/audio/liceland.mp3"
                   :sprites [ (clickable largest-mosquito :lookin-at-me-2) ]
@@ -62,14 +75,5 @@
                     :music "/audio/liceland.mp3"
                     :sprites [ (clickable largest-mosquito :heading-on-2) ]
                     :update #(assoc % :talked-to-mosq true)
-                    :description "\"You're just like all the others\""}
-   :heading-on-3 {:background "/images/hairs-low.png"
-                  :description "You've lost your way in the immensity"
-                  :forward :head-east }
-   :head-east {:background "/images/hairs-low.png"
-               :forward :heading-on
-               :music "/audio/liceland.mp3"
-               :sprites [ (clickable mosquito :heading-on) ]
-               :right :head-west
-               :left :head}})
+                    :description "\"You're just like all the others\""}})
 

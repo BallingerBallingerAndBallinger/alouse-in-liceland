@@ -130,11 +130,14 @@
   (doall (map #(aset pixels % 0xff000000) 
               (range (* width (int (* 0.8 height))) (* width height)))))
 
+(defn draw-letter [index letter]
+  (.fillText context letter (* (+ 2 index) 4) (* 0.92 height)))
+
 (defn draw-text [text]
   (draw text-box-fn)
   (aset context "fillStyle" "#FFFFFF")
-  (aset context "font"  "12px Arial, sans-serif")
-  (.fillText context text 8 (* 0.92 height)))
+  (aset context "font"  "9px monospace")
+  (doall (map-indexed draw-letter text)))
 
 (defn draw-image [image x y]
   (.drawImage context (sprites/get-loaded image) x y))

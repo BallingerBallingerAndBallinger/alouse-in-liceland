@@ -33,8 +33,8 @@
 (def largest-mosquito
   (cljs.core/merge mosquito
                    {:positionX (* 0.1 width)
-                    :positionY (* -0.2 width)
-                    :scale 16}))
+                    :positionY (* -0.5 height)
+                    :scale 8}))
 
 (def axe
   {:positionX (* 0.34 width)

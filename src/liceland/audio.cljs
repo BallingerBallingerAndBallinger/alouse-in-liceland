@@ -1,4 +1,4 @@
-(ns liceland.sounds
+(ns liceland.audio
   (:require-macros 
    [cljs.core.async.macros :refer [go]])
   (:require

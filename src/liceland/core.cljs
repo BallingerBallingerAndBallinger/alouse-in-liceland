@@ -142,6 +142,8 @@
   (if (:sound sprite) (sounds/stop-loaded-audio (:sound sprite))))
 
 (defn cleanup-scene [scene]
+  (if (:music scene)
+    (sounds/stop-loaded-audio (:music scene)))
   (if (:sprites scene)
     (doall (map cleanup-sprite (:sprites scene)))))
 

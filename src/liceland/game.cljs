@@ -26,6 +26,14 @@
                     :positionY (* -0.2 width)
                     :scale 16}))
 
+;; Be careful with the state...
+;; It should be used extremely sparingly
+;; e.g. It's easy to subtly break live-reloading by getting something stuck in your state.
+;; e.g. It's easy to get into an "unreachable state" then keep developing worlds without realizing that no player will ever
+;;      have the same state that you do...
+;; e.g. Asset-preloading depends on sprites, backgrounds, music, and sounds to be reachable with an empty state.
+;; However, with all of those warnings, having access to it give you great power, and with great power comes...! (Mayhem!)
+
 (defn scenes [state]
   (merge (mosquito-dialog state)
          {:head-west {:background "/images/hairs-low.png"
@@ -60,20 +68,17 @@
                       :left :head}}))
 
 (defn mosquito-dialog [state]
-  {:lookin-at-me {:background "/images/hairs-low.png"
-                  :forward :heading-on-3
-                  :music "/audio/liceland.mp3"
-                  :sprites [ (clickable largest-mosquito :lookin-at-me-2) ]
-                  :description "\"Oh, another one\""}
-   :not-lookin-at-me {:background "/images/hairs-low.png"
-                      :forward :heading-on-3
-                      :music "/audio/liceland.mp3"
-                      :sprites [ (clickable largest-mosquito :heading-on-2) ]
-                      :description "\"...\""}
-   :lookin-at-me-2 {:background "/images/hairs-low.png"
-                    :forward :heading-on-3
-                    :music "/audio/liceland.mp3"
-                    :sprites [ (clickable largest-mosquito :heading-on-2) ]
-                    :update #(assoc % :talked-to-mosq true)
-                    :description "\"You're just like all the others\""}})
+  ;; Demonstrating how a base scene can be extended...  Imagine the possibilities.
+  (let [base (partial merge {:music "/audio/liceland.mp3"
+                             :background "/images/hairs-low.png"})]
+    {:lookin-at-me (base {:forward :heading-on-3
+                          :sprites [ (clickable largest-mosquito :lookin-at-me-2) ]
+                          :description "\"Oh, another one\""})
+     :not-lookin-at-me (base {:forward :heading-on-3
+                              :sprites [ (clickable largest-mosquito :heading-on-2) ]
+                              :description "\"...\""})
+     :lookin-at-me-2 (base {:forward :heading-on-3
+                            :sprites [ (clickable largest-mosquito :heading-on-2) ]
+                            :update #(assoc % :talked-to-mosq true)
+                            :description "\"You're just like all the others\""})}))
 

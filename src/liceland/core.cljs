@@ -19,8 +19,8 @@
 
 (def mosquito
   {:sound "/audio/mosquito.mp3"
-   :positionX (* 0.8 width)
-   :positionY (* 0.2 height)
+   :positionX (* 0.7 width)
+   :positionY (* 0.4 height)
    :image "/images/mosquito-flit1.png"})
 
 (def scenes
@@ -53,6 +53,7 @@
                :left :head}})
 
 (defonce current-scene (atom nil))
+(defonce current-scene-tag (atom nil))
 
 (def images
   (distinct (concat
@@ -155,11 +156,15 @@
     (draw-text (:description scene))))
 
 (defn set-scene [scene]
-  (cleanup-scene @current-scene)
+  (if @current-scene (cleanup-scene @current-scene))
+  (reset! current-scene-tag scene)
   (reset! current-scene (scene scenes))
   (draw-scene (scene scenes)))
 
-(defn on-assets-loaded [] (set-scene :head))
+(defn on-assets-loaded []
+  (if (nil? @current-scene)
+    (set-scene :head)
+    (set-scene @current-scene-tag)))
 
 (defn on-js-reload []
   (on-assets-loaded)

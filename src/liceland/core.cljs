@@ -2,8 +2,9 @@
   (:require-macros
    [cljs.core.async.macros :refer [go]])
   (:require
-   [cljs.core.async :refer [<! merge]]
    [liceland.sprites :as sprites]
+   [liceland.sounds :as sounds]
+   [cljs.core.async :refer [<! merge]]
    [thi.ng.typedarrays.core :as ta]))
 
 (enable-console-print!)
@@ -19,9 +20,11 @@
 (def scenes
   {:head-west {:background "/images/hairs-low.png"
                :description "Nothing but trees"
+               :music "/audio/liceland.mp3"
                :right :head }
    :head {:background "/images/hairs-low.png"
           :description "A vast forest stretches as far as the eye can see"
+          :music "/audio/liceland.mp3"
           :left :head-west
           :right :head-east }
    :head-east {:background "/images/hairs-low.png"
@@ -32,10 +35,14 @@
 (def images
   (map #(:background %) (vals scenes)))
 
-(declare on-images-loaded)
+(def sounds
+  (filter #(not (nil? %)) (map #(:music %) (vals scenes))))
+
+(declare on-assets-loaded)
 (defonce load-images (go
                        (<! (merge (map sprites/load images)))
-                       (on-images-loaded)))
+                       (<! (merge (map sounds/load sounds)))
+                       (on-assets-loaded)))
 
 (defn set-cursor [cursor]
   (case cursor
@@ -91,6 +98,8 @@
   (.drawImage context (sprites/get-loaded image) x y))
 
 (defn draw-scene [scene]
+  (if (:music scene)
+    (sounds/start-loaded-audio-loop (:music scene)))
   (draw #(.fill % 0xfffff0ff))
   (draw-image (:background scene) 0 0)
   (if (:description scene)
@@ -100,9 +109,9 @@
   (reset! current-scene (scene scenes))
   (draw-scene (scene scenes)))
 
-(defn on-images-loaded [] (set-scene :head))
+(defn on-assets-loaded [] (set-scene :head))
 
 (defn on-js-reload []
-  (on-images-loaded)
+  (on-assets-loaded)
   (.log js/console "Reload success!"))
 

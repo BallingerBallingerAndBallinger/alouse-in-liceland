@@ -90,17 +90,22 @@
           :right :head-east }
    :heading-on {:background "/images/hairs-low.png"
                 :forward :heading-on-2
+                :back :head-east
                 :sprites [ (clickable larger-mosquito :heading-on-2) ]
                 :music "/audio/liceland.mp3"
                 :description "It just keeps going"}
    :heading-on-2 {:background "/images/hairs-low.png"
                   :forward :heading-on-3
+                  :back :heading-on
                   :music "/audio/liceland.mp3"
                   :sprites [ (if (not (:talked-to-mosq state))
                                (clickable largest-mosquito :lookin-at-me)
                                (clickable largest-mosquito :not-lookin-at-me))]}
    :heading-on-3 {:background "/images/hairs-low.png"
                   :description "You've lost your way in the immensity"
+                  :back    :head-east
+                  :left    :head-east
+                  :right   :head-east
                   :forward :head-east }
    :head-east {:background "/images/hairs-low.png"
                :forward :heading-on

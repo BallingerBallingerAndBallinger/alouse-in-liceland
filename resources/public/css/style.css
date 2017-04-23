@@ -20,3 +20,7 @@
     cursor: url(/images/click.png), auto;
 }
 
+.back-cursor {
+    cursor: url(/images/back.png), auto;
+}
+

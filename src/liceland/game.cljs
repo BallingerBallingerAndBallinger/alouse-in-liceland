@@ -38,7 +38,7 @@
 
 (def axe
   {:positionX (* 0.34 width)
-   :positionY (* 0.62 height)
+   :positionY (* 0.65 height)
    :image "/images/axe.png"})
 
 ;; Scenes permit the following properties
@@ -77,7 +77,7 @@
               :description "A nice little clearing"
               :sprites (if (not (:axe state)) [(clickable axe :get-axe)])
               :music "/audio/liceland.mp3"
-              :back  :head-west }
+              :back :head-west }
    :get-axe {:background "/images/hairs-low.png"
              :description "Still sharp"
              :music "/audio/liceland.mp3"
@@ -116,16 +116,19 @@
 
 (defn mosquito-dialog [state]
   ;; Demonstrating how a base scene can be extended...  Imagine the possibilities.
-  (let [base (partial merge {:music "/audio/liceland.mp3"
+  (let [base (partial merge {:forward :heading-on-3
+                             :left :heading-on-3
+                             :back :heading-on
+                             :music "/audio/liceland.mp3"
                              :background "/images/hairs-low.png"})]
-    {:lookin-at-me (base {:forward :heading-on-3
-                          :sprites [ (clickable largest-mosquito :lookin-at-me-2) ]
+
+    {:lookin-at-me (base {:sprites [ (clickable largest-mosquito :lookin-at-me-2) ]
                           :description "\"Oh, another one\""})
-     :not-lookin-at-me (base {:forward :heading-on-3
-                              :sprites [ (clickable largest-mosquito :heading-on-2) ]
+
+     :not-lookin-at-me (base {:sprites [ (clickable largest-mosquito :heading-on-2) ]
                               :description "\"...\""})
-     :lookin-at-me-2 (base {:forward :heading-on-3
-                            :sprites [ (clickable largest-mosquito :heading-on-2) ]
+
+     :lookin-at-me-2 (base {:sprites [ (clickable largest-mosquito :heading-on-2) ]
                             :update #(assoc % :talked-to-mosq true)
                             :description "\"You're just like all the others\""})}))
 

@@ -36,6 +36,11 @@
                     :positionY (* -0.2 width)
                     :scale 16}))
 
+(def axe
+  {:positionX (* 0.34 width)
+   :positionY (* 0.62 height)
+   :image "/images/axe.png"})
+
 ;; Scenes permit the following properties
 ;; background:  URL of a background for the scene
 ;; description: Text that appears beneath a scene
@@ -43,6 +48,7 @@
 ;; right:       A symbol pointing to a scene to jump to when right is clicked
 ;; left:        A symbol pointing to a scene to jump to when left is clicked
 ;; forward:     A symbol pointing to a scene to jump to when forward is clicked
+;; back:        A symbol pointing to a scene to jump to when back is clicked
 ;; sprites:     An array of sprites present in the scene
 ;; update:      A function to update the state when a scene is entered.... AND FOR THE LOVE OF GOD
 
@@ -64,8 +70,19 @@
   {:head-west {:background "/images/hairs-low.png"
                :description "Nothing but trees"
                :music "/audio/liceland.mp3"
+               :forward :clearing
                :right :head
                :left :head-east }
+   :clearing {:background "/images/hairs-low.png"
+              :description "A nice little clearing"
+              :sprites (if (not (:axe state)) [(clickable axe :get-axe)])
+              :music "/audio/liceland.mp3"
+              :back  :head-west }
+   :get-axe {:background "/images/hairs-low.png"
+             :description "Still sharp"
+             :music "/audio/liceland.mp3"
+             :update #(assoc % :axe true)
+             :back :head-west}
    :head {:background "/images/hairs-low.png"
           :description "A vast forest stretches as far as the eye can see"
           :music "/audio/liceland.mp3"

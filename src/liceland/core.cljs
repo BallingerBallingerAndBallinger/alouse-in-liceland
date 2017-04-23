@@ -29,20 +29,23 @@
 
 (def sounds
   (distinct (concat
-             (map #(:sound %) (mapcat #(:sprites %) (vals (scenes @current-state))))
+             (remove nil? (map #(:sound %) (mapcat #(:sprites %) (vals (scenes @current-state)))))
              (remove nil? (map #(:music %) (vals (scenes @current-state)))))))
 
 (declare on-assets-loaded)
-(defonce load-images (go
+(defn load-assets [] (go
                        (<! (merge (map sprites/load images)))
                        (<! (merge (map sounds/load sounds)))
                        (on-assets-loaded)))
+
+(defonce initial-load (load-assets))
 
 (defn set-cursor [cursor]
   (case cursor
     :left    (.setAttribute app "class" "left-cursor")
     :right   (.setAttribute app "class" "right-cursor")
     :forward (.setAttribute app "class" "forward-cursor")
+    :back    (.setAttribute app "class" "back-cursor")
     :click   (.setAttribute app "class" "click-cursor")
     :norm    (.setAttribute app "class" "norm-cursor")
     (.setAttribute app "class" "")))
@@ -81,6 +84,10 @@
                      (:forward @current-scene))
                 (set-cursor :forward)
 
+                (and (> y (* height 0.8))
+                     (:back @current-scene))
+                (set-cursor :back)
+                
                 (and sprite (:click sprite))
                 (set-cursor :click)
 
@@ -102,7 +109,11 @@
               (and (< y (* height 0.2))
                    (:forward @current-scene))
               (set-scene (:forward @current-scene))
-              
+
+              (and (> y (* height 0.8))
+                   (:back @current-scene))
+              (set-scene (:back @current-scene))
+ 
               (and (> x (* width 0.8))
                    (:right @current-scene))
               (set-scene (:right @current-scene))
@@ -170,6 +181,6 @@
     (set-scene @current-scene-tag)))
 
 (defn on-js-reload []
-  (on-assets-loaded)
+  (load-assets)
   (.log js/console "Reload success!"))
 

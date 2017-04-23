@@ -27,7 +27,20 @@
           :music "/audio/liceland.mp3"
           :left :head-west
           :right :head-east }
+   :heading-on {:background "/images/hairs-low.png"
+                :forward :heading-on-2
+                :music "/audio/liceland.mp3"
+                :description "It just keeps going"}
+   :heading-on-2 {:background "/images/hairs-low.png"
+                  :forward :heading-on-3
+                  :music "/audio/liceland.mp3"
+                  :description "Is there no end?"}
+   :heading-on-3 {:background "/images/hairs-low.png"
+                  :description "You've lost your way in the immensity"
+                  :forward :head-east}
    :head-east {:background "/images/hairs-low.png"
+               :forward :heading-on
+               :music "/audio/liceland.mp3"
                :left :head}})
 
 (defonce current-scene (atom nil))
@@ -46,9 +59,10 @@
 
 (defn set-cursor [cursor]
   (case cursor
-    :left  (.setAttribute app "class" "left-cursor")
-    :right (.setAttribute app "class" "right-cursor")
-    :norm  (.setAttribute app "class" "norm-cursor")
+    :left    (.setAttribute app "class" "left-cursor")
+    :right   (.setAttribute app "class" "right-cursor")
+    :forward (.setAttribute app "class" "forward-cursor")
+    :norm    (.setAttribute app "class" "norm-cursor")
     (.setAttribute app "class" "")))
 
 (defonce watch-mouse-move
@@ -59,11 +73,15 @@
               (and (< (- (.-pageX e) (.-offsetLeft element)) (* width 0.2))
                    (:left @current-scene))
               (set-cursor :left)
-
+             
               (and (> (- (.-pageX e) (.-offsetLeft element)) (* width 0.8))
                    (:right @current-scene))
               (set-cursor :right)
 
+              (and (< (- (.-pageY e) (.-offsetTop element)) (* height 0.2))
+                   (:forward @current-scene))
+              (set-cursor :forward)
+              
               :else
               (set-cursor :norm))))))
 
@@ -75,6 +93,11 @@
               (and (< (- (.-pageX e) (.-offsetLeft element)) (* width 0.2))
                    (:left @current-scene))
               (set-scene (:left @current-scene))
+
+              (and (< (- (.-pageY e) (.-offsetTop element)) (* height 0.2))
+                   (:forward @current-scene))
+              (set-scene (:forward @current-scene))
+              
               (and (> (- (.-pageX e) (.-offsetLeft element)) (* width 0.8))
                    (:right @current-scene))
               (set-scene (:right @current-scene)))))))

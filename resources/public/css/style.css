@@ -12,4 +12,8 @@
     cursor: url(/images/norm.png), auto;
 }
 
+.forward-cursor {
+    cursor: url(/images/forward.png), auto;
+}
+
 

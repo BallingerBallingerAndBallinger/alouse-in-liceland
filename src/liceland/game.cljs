@@ -5,6 +5,7 @@
 (defonce height (.getAttribute app "height"))
 (declare forest)
 (declare mosquito-dialog)
+(declare caterpillar-dialog)
 
 ;; Sprites permit the following properties
 ;; sound: URL of a sound file to play when the sprite is visible (looping)
@@ -30,10 +31,20 @@
    :positionY (* 0.5 height)
    :image "/images/louse-eggs.png"})
 
+(def well
+  {:positionX (* 0.7 width)
+   :positionY (* 0.4 height)
+   :image "/images/well.png"})
+
 (def fallen
   {:positionX (* 0.7 width)
    :positionY (* 0.3 height)
    :image "/images/fallen.png"})
+
+(def caterpillar
+  {:positionX (* 0.60 width)
+   :positionY (* 0.017 height)
+   :image "/images/Caterpillar.png"})
 
 (def demonwig
   {:positionX (* 0.3 width)
@@ -42,15 +53,15 @@
 
 (def mosquito
   {:sound "/audio/mosquito.mp3"
-   :positionX (* 0.76 width)
+   :positionX (* 0.7 width)
    :positionY (* 0.4 height)
    :image "/images/mosquito-flit1.png"})
 
 ;; Demonstrating one way of building things up from simpler pieces.
 (def larger-mosquito
   (cljs.core/merge mosquito
-                   {:positionX (* 0.2 width)
-                    :positionY (* 0.45 height)
+                   {:positionX (* 0.6 width)
+                    :positionY (* 0.5 height)
                     :scale 2 }))
 
 (def largest-mosquito
@@ -88,7 +99,8 @@
 
 (defn scenes [state]
   (merge (mosquito-dialog state)
-         (forest state)))
+         (forest state)
+         (caterpillar-dialog state)))
 
 (defn forest [state]
   {:head-west
@@ -147,7 +159,8 @@
 
    :heading-on
    {:background "/images/forest5.png"
-    :forward :heading-on-2
+    :forward :well
+    :left :well
     :back :head-east
     :sprites [  (clickable larger-mosquito :heading-on-2) ]
     :music "/audio/liceland.mp3"
@@ -172,6 +185,15 @@
     :right   :head-east
     :forward :head-east }
 
+   :well
+   {:background "images/forest2.png"
+    :music "/audio/Liceland3.mp3"
+    :sprites (cond
+               (:eggs state) [ well (clickable caterpillar :caterpillar-1)]
+               :default [ well ])
+    :back  :heading-on
+    }
+   
    :head-east
    {:background "/images/forest4.png"
     :forward :heading-on
@@ -179,6 +201,18 @@
     :sprites [  (clickable mosquito :heading-on) ]
     :right :head-west
     :left :head}})
+
+(defn caterpillar-dialog [state]
+  {
+   :caterpilar-1
+   {:background "images/forest2.png"
+    :music "/audio/Liceland3.mp3"
+    :sprites (cond
+               (:eggs state) [ well (clickable caterpillar :caterpillar-1)]
+               :default [ well ])
+    :back  :heading-on
+    }})
+
 
 (defn mosquito-dialog [state] {
 

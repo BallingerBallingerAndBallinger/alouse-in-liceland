@@ -24,8 +24,8 @@
 
 (def mosquito
   {:sound "/audio/mosquito.mp3"
-   :positionX (* 0.7 width)
-   :positionY (* 0.34 height)
+   :positionX (* 0.76 width)
+   :positionY (* 0.4 height)
    :image "/images/mosquito-flit1.png"})
 
 ;; Demonstrating one way of building things up from simpler pieces.

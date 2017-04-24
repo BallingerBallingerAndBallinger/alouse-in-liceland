@@ -36,85 +36,85 @@
   {:positionX (* 0 width)
    :positionY (* -1 height)
    :scale 2
-   :image "/images/hand.png"})
+   :image "images/hand.png"})
 
 (def gasoline
   {:positionX (* 0.7 width)
    :positionY (* 0.6 height)
-   :image "/images/gas.png"})
+   :image "images/gas.png"})
 
 (def match
   {:positionX (* 0.1 width)
    :positionY (* 0.5 height)
-   :image "/images/match.png"})
+   :image "images/match.png"})
 
 (def sign
   {:positionX 195
    :positionY 132
-   :image "/images/well-sign.png"})
+   :image "images/well-sign.png"})
 
 (def destroyed-nest
   {:positionX (* 0.25 width)
    :positionY (* 0.5 height)
-   :image "/images/louse-nest-destroyed.png"})
+   :image "images/louse-nest-destroyed.png"})
 
 (def louse-nest
   {:positionX (* 0.25 width)
    :positionY (* 0.5 height)
-   :image "/images/louse-nest.png"})
+   :image "images/louse-nest.png"})
 
 (def louse-eggs
   {:positionX (* 0.25 width)
    :positionY (* 0.5 height)
-   :image "/images/louse-eggs.png"})
+   :image "images/louse-eggs.png"})
 
 (def destroyed-eggs
   {:positionX (* 0.25 width)
    :positionY (* 0.5 height)
-   :image "/images/louse-eggs-destroyed.png"})
+   :image "images/louse-eggs-destroyed.png"})
 
 (def well
   {:positionX (* 0.7 width)
    :positionY (* 0.4 height)
-   :image "/images/well.png"})
+   :image "images/well.png"})
 
 (def well-no-rope
   {:positionX (* 0.7 width)
    :positionY (* 0.4 height)
-   :image "/images/well-no-rope.png"})
+   :image "images/well-no-rope.png"})
 
 (def post
   {:positionX 120
    :positionY 0
-   :image "/images/post.png"})
+   :image "images/post.png"})
 
 (def rope
   {:positionX 57
    :positionY 81
    :scale 0.5
-   :image "/images/rope.png"})
+   :image "images/rope.png"})
 
 (def fallen
   {:positionX (* 0.7 width)
    :positionY (* 0.3 height)
-   :image "/images/fallen.png"})
+   :image "images/fallen.png"})
 
 (def caterpillar
   {:positionX (* 0.60 width)
    :positionY (* 0.12 height)
-   :image "/images/Caterpillar.png"})
+   :image "images/Caterpillar.png"})
 
 (def devilwig
   {:positionX (* 0.24 width)
    :positionY (* 0.12 height)
    :scale 3
-   :image "/images/devilwig.png"})
+   :image "images/devilwig.png"})
 
 (def mosquito
-  {:sound "/audio/mosquito.mp3"
+  {:sound "audio/mosquito.mp3"
    :positionX (* 0.7 width)
    :positionY (* 0.4 height)
-   :image "/images/mosquito-flit1.png"})
+   :image "images/mosquito-flit1.png"})
 
 ;; Demonstrating one way of building things up from simpler pieces.
 (def larger-mosquito
@@ -132,7 +132,7 @@
 (def axe
   {:positionX (* 0.34 width)
    :positionY (* 0.65 height)
-   :image "/images/axe.png"})
+   :image "images/axe.png"})
 
 (defn cliffside-sprites [state]
   (cond
@@ -171,18 +171,18 @@
 
 (defn forest [state]
   {:head-west
-   {:background "/images/forest9.png"
+   {:background "images/forest9.png"
     :description "Nothing but trees"
-    :music "/audio/liceland.mp3"
+    :music "audio/liceland.mp3"
     :forward :clearing
     :right :head
     :left :head-east }
 
    :clearing
-   {:background "/images/forest7.png"
+   {:background "images/forest7.png"
     :sound (cond
-             (:rumbled state) "/audio/scratch.mp3"
-             :default "/audio/insect.mp3")
+             (:rumbled state) "audio/scratch.mp3"
+             :default "audio/insect.mp3")
     :description (cond
                    (:rumbled state) nil
                    (:eggs state) "You will meet them soon. Wait and prepare."
@@ -200,76 +200,76 @@
               (:rumbled state) (set-state :babies :true)
               :default nil)
 
-    :music "/audio/liceland.mp3"
+    :music "audio/liceland.mp3"
     :back :head-west }
 
    :unreachable-sprite-loader
    {:sprites [hand gasoline]}
    
    :nooooo
-   {:background "/images/forest7.png"
+   {:background "images/forest7.png"
     :description "They're gone... My children..."
-    :sound "/audio/insect.mp3"
+    :sound "audio/insect.mp3"
     :sprites (cond
                (:match state) [ destroyed-nest ( clickable destroyed-eggs :nooooo ) (clickable gasoline :the-end) ]
                :default [ destroyed-nest ( clickable destroyed-eggs :clearing ) ])
-    :music "/audio/liceland.mp3"
+    :music "audio/liceland.mp3"
     :back :head-west }
    
    :get-axe
-   {:background "/images/forest7.png"
+   {:background "images/forest7.png"
     :description "Still sharp"
-    :music "/audio/liceland.mp3"
+    :music "audio/liceland.mp3"
     :sprites [(clickable fallen :chop-tree)]
     :update (set-state :axe true)
     :back :head-west}
 
    :chop-tree
-   {:background "/images/forest7.png"
-    :music "/audio/liceland.mp3"
-    :sound "/audio/chopping.mp3"
+   {:background "images/forest7.png"
+    :music "audio/liceland.mp3"
+    :sound "audio/chopping.mp3"
     :update (set-state :chopped :true)
     :sprites [(clickable louse-nest :lay-eggs)]
     :back :head-west}
 
    :lay-eggs
-   {:background "/images/forest7.png"
-    :music "/audio/liceland.mp3"
+   {:background "images/forest7.png"
+    :music "audio/liceland.mp3"
     :description "Your dear children are safe and warm"
     :update (set-state :eggs :true)
     :sprites [louse-nest louse-eggs]
     :back :head-west}
    
    :head
-   {:background "/images/forest8.png"
+   {:background "images/forest8.png"
     :description "A vast forest stretches as far as the eye can see"
-    :music "/audio/liceland.mp3"
+    :music "audio/liceland.mp3"
     :left :head-west
     :right :head-east }
 
    :heading-on
-   {:background "/images/forest5.png"
+   {:background "images/forest5.png"
     :forward :well
     :left :well
     :back :head-east
     :sprites [ (clickable larger-mosquito :heading-on-2) ]
-    :music "/audio/liceland.mp3"
+    :music "audio/liceland.mp3"
     :description "It just keeps going"}
 
    :heading-on-2
-   {:background "/images/forest11.png"
+   {:background "images/forest11.png"
     :forward :heading-on-3
     :back :heading-on
-    :music "/audio/liceland.mp3"
+    :music "audio/liceland.mp3"
     :sprites [ (cond
                  (:talked-to-mosq state) (clickable largest-mosquito :not-lookin-at-me)
                  (:mosq-one state) (clickable largest-mosquito :lookin-at-me-again)
                  :default (clickable largest-mosquito :lookin-at-me))]}
 
    :heading-on-3
-   {:background "/images/forest5.png"
+   {:background "images/forest5.png"
     :description "You've lost your way"
-    :music   "/audio/liceland.mp3"
+    :music   "audio/liceland.mp3"
     :back    :head-east
     :left    :head-east
     :right   :head-east
@@ -277,7 +277,7 @@
 
    :well
    {:background "images/forest2.png"
-    :music "/audio/Liceland3.mp3"
+    :music "audio/Liceland3.mp3"
     :sprites (cond
                (:rope state) [ well-no-rope (clickable caterpillar :caterpillar-1) ]
                (:eggs state) [ well (clickable caterpillar :caterpillar-1)]
@@ -287,27 +287,27 @@
 
    :brb
    {:back :well
-    :music "/audio/Liceland3.mp3"
-    :background "/images/well-sign-click.png"}
+    :music "audio/Liceland3.mp3"
+    :background "images/well-sign-click.png"}
    
    :cliffside
-   {:background "/images/ledge.png"
-    :music "/audio/Liceland3.mp3"
+   {:background "images/ledge.png"
+    :music "audio/Liceland3.mp3"
     :description "The cliff is steep"
     :sprites (cliffside-sprites state)
     :back :well }
 
    :roped
-   {:background "/images/ledge.png"
-    :music "/audio/Liceland3.mp3"
+   {:background "images/ledge.png"
+    :music "audio/Liceland3.mp3"
     :description "An old rope is firmly tied around the trunk"
     :update (set-state :tied :true)
     :sprites [ (clickable post :rumbling) (clickable rope :rumbling) ]
     :back :rumbling }
 
    :rumbling
-   {:background "/images/ledge.png"
-    :sound "/audio/scratch.mp3"
+   {:background "images/ledge.png"
+    :sound "audio/scratch.mp3"
     :update (set-state :rumbled :true)
     :sprites [ (clickable post :check) (clickable rope :check) ]
     :back :well
@@ -315,9 +315,9 @@
 
    :check
    {:description "I have to check on my babies"
-    :music "/audio/Liceland3.mp3"
+    :music "audio/Liceland3.mp3"
     :sprites (cliffside-sprites state)
-    :background "/images/ledge.png"
+    :background "images/ledge.png"
     :back :well}
    
    :help
@@ -329,7 +329,7 @@
    
    :ear
    {:background "images/Ear.png"
-    :music "/audio/liceland2.mp3"
+    :music "audio/liceland2.mp3"
     :back (cond
             (state :match) :clearing
             :default :cliffside)
@@ -337,7 +337,7 @@
 
    :ear-canal
    {:background "images/ear-canal.png"
-    :music "/audio/liceland2.mp3"
+    :music "audio/liceland2.mp3"
     :sprites (cond
                (:match state) [ (clickable devilwig :devilwig-phrase) ]
                :default [ (clickable match :get-match) (clickable devilwig :devilwig-phrase) ])
@@ -346,7 +346,7 @@
    :devilwig-phrase
    {:background "images/ear-canal.png"
     :description (get devil-phrases (rand-int (count devil-phrases)))
-    :music "/audio/liceland2.mp3"
+    :music "audio/liceland2.mp3"
     :sprites (cond
                (:match state) [ (clickable devilwig :ear-canal) ]
                :default [ (clickable match :get-match) (clickable devilwig :ear-canal) ])
@@ -354,14 +354,14 @@
 
    :get-match
    {:background "images/ear-canal.png"
-    :music "/audio/liceland2.mp3"
+    :music "audio/liceland2.mp3"
     :description "You know what you must do"
     :update (set-state :match :true)
     :back :ear
     :sprites [ (clickable devilwig :devilwig-phrase) ] }
 
    :the-end
-   {:background "/images/flames.png"
+   {:background "images/flames.png"
     :forward     :credits
     :backward    :credits
     :left        :credits
@@ -369,12 +369,12 @@
     :description "Revenge..."}
 
    :credits
-   {:background "/images/end-sign.png"}
+   {:background "images/end-sign.png"}
    
    :head-east
-   {:background "/images/forest4.png"
+   {:background "images/forest4.png"
     :forward :heading-on
-    :music "/audio/liceland.mp3"
+    :music "audio/liceland.mp3"
     :sprites [  (clickable mosquito :heading-on) ]
     :right :head-west
     :left :head}})
@@ -383,7 +383,7 @@
   {
    :caterpillar-1
    {:background "images/forest2.png"
-    :music "/audio/Liceland3.mp3"
+    :music "audio/Liceland3.mp3"
     :description "\"Oh dear, oh me, wherever might I be?\""
     :sprites (cond
                (:rope state) [ well-no-rope (clickable caterpillar :well) ]
@@ -393,7 +393,7 @@
 
    :caterpillar-2
    {:background "images/forest2.png"
-    :music "/audio/Liceland3.mp3"
+    :music "audio/Liceland3.mp3"
     :description "\"Way back I saw a funny hare. Surely I'm not near there.\""
     :sprites [ well (clickable caterpillar :caterpillar-3) ]
     :forward :cliffside
@@ -401,7 +401,7 @@
 
    :caterpillar-3
    {:background "images/forest2.png"
-    :music "/audio/Liceland3.mp3"
+    :music "audio/Liceland3.mp3"
     :description "\"Wherever would he sit! Neither hide nor hair could fit!\""
     :sprites [ well (clickable caterpillar :caterpillar-4) ]
     :forward :cliffside
@@ -409,7 +409,7 @@
 
    :caterpillar-4
    {:background "images/forest2.png"
-    :music "/audio/Liceland3.mp3"
+    :music "audio/Liceland3.mp3"
     :description "\"Ho! Mistress so little, lend an ear to hear my riddle?\""
     :sprites [ well (clickable caterpillar :caterpillar-5) ]
     :forward :cliffside
@@ -417,7 +417,7 @@
 
    :caterpillar-5
    {:background "images/forest2.png"
-    :music "/audio/Liceland3.mp3"
+    :music "audio/Liceland3.mp3"
     :description "\"What's at the bottom of this well? Tembling and Akakell!\""
     :sprites [ well (clickable caterpillar :caterpillar-6) ]
     :forward :cliffside
@@ -425,7 +425,7 @@
 
    :caterpillar-6
    {:background "images/forest2.png"
-    :music "/audio/Liceland3.mp3"
+    :music "audio/Liceland3.mp3"
     :description "\"Shame it broke. Must be an old rope.\""
     :update (set-state :rope :true)
     :sprites [ well-no-rope (clickable caterpillar :well) ]
@@ -438,8 +438,8 @@
    {:forward :heading-on-3
     :left :heading-on-3
     :back :heading-on
-    :music "/audio/liceland.mp3"
-    :background "/images/forest11.png"
+    :music "audio/liceland.mp3"
+    :background "images/forest11.png"
     :sprites [ (clickable largest-mosquito :heading-on-2) ]
     :description "\"...\""}
    
@@ -447,8 +447,8 @@
    {:forward :heading-on-3
     :left :heading-on-3
     :back :heading-on
-    :music "/audio/liceland.mp3"
-    :background "/images/forest11.png"
+    :music "audio/liceland.mp3"
+    :background "images/forest11.png"
     :sprites [ (clickable largest-mosquito :lookin-at-me-2) ]
     :description "\"Oh, another one\""}
 
@@ -456,8 +456,8 @@
    {:forward :heading-on-3
     :left :heading-on-3
     :back :heading-on
-    :music "/audio/liceland.mp3"
-    :background "/images/forest11.png"
+    :music "audio/liceland.mp3"
+    :background "images/forest11.png"
     :sprites [ (clickable largest-mosquito :lookin-at-me-3) ]
     :description "\"You're no different from the others. Leave me be.\""}
 
@@ -465,8 +465,8 @@
    {:forward :heading-on-3
     :left :heading-on-3
     :back :heading-on
-    :music "/audio/liceland.mp3"
-    :background "/images/forest11.png"
+    :music "audio/liceland.mp3"
+    :background "images/forest11.png"
     :sprites [ (clickable largest-mosquito :lookin-at-me-4) ]
     :description "\"I can't help one like you.\""}
 
@@ -474,8 +474,8 @@
    {:forward :heading-on-3
     :left :heading-on-3
     :back :heading-on
-    :music "/audio/liceland.mp3"
-    :background "/images/forest11.png"
+    :music "audio/liceland.mp3"
+    :background "images/forest11.png"
     :update (set-state :mosq-one :true)
     :sprites [ (clickable largest-mosquito :heading-on-2) ]
     :description "\"What would be the point?\"" }
@@ -484,8 +484,8 @@
    {:forward :heading-on-3
     :left :heading-on-3
     :back :heading-on
-    :music "/audio/liceland.mp3"
-    :background "/images/forest11.png"
+    :music "audio/liceland.mp3"
+    :background "images/forest11.png"
     :sprites [ (clickable largest-mosquito :lookin-at-me-5) ]
     :description "\"You'll die on this tiny world.\""}
    
@@ -493,8 +493,8 @@
    {:forward :heading-on-3
     :left :heading-on-3
     :back :heading-on
-    :music "/audio/liceland.mp3"
-    :background "/images/forest11.png"
+    :music "audio/liceland.mp3"
+    :background "images/forest11.png"
     :sprites [ (clickable largest-mosquito :lookin-at-me-6) ]
     :description "\"Beyond?\""}
 
@@ -502,16 +502,16 @@
    {:forward :heading-on-3
     :left :heading-on-3
     :back :heading-on
-    :music "/audio/liceland.mp3"
-    :background "/images/forest11.png":sprites [ (clickable largest-mosquito :lookin-at-me-7) ]
+    :music "audio/liceland.mp3"
+    :background "images/forest11.png":sprites [ (clickable largest-mosquito :lookin-at-me-7) ]
     :description "\"Nothing for you there\""}
 
    :lookin-at-me-7
    {:forward :heading-on-3
     :left :heading-on-3
     :back :heading-on
-    :music "/audio/liceland.mp3"
-    :background "/images/forest11.png":sprites [ (clickable largest-mosquito :heading-on-2) ]
+    :music "audio/liceland.mp3"
+    :background "images/forest11.png":sprites [ (clickable largest-mosquito :heading-on-2) ]
     :update (set-state :talked-to-mosq true)
     :description "\"Stop eyeing my wings, creep.\""}})
 

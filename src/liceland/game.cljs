@@ -22,8 +22,9 @@
   #(assoc % key value))
 
 (def hand
-  {:positionX (* 0.25 width)
-   :positionY -10
+  {:positionX (* 0 width)
+   :positionY (* -1 height)
+   :scale 2
    :image "/images/hand.png"})
 
 (def destroyed-nest
@@ -71,10 +72,11 @@
    :positionY (* 0.12 height)
    :image "/images/Caterpillar.png"})
 
-(def demonwig
-  {:positionX (* 0.3 width)
-   :positionY (* 0.1 height)
-   :image "/images/earwig.png"})
+(def devilwig
+  {:positionX (* 0.28 width)
+   :positionY (* 0.2 height)
+   :scale 3
+   :image "/images/devilwig.png"})
 
 (def mosquito
   {:sound "/audio/mosquito.mp3"
@@ -146,20 +148,36 @@
 
    :clearing
    {:background "/images/forest7.png"
+    :sound (cond
+             (:rumbled state) "/audio/scratch.mp3"
+             :default "/audio/insect.mp3")
     :description (cond
+                   (:rumbled state) nil 
                    (:eggs state) "You will meet them soon. Wait and prepare."
                    (not (:chopped state)) "A nice little clearing")
     :sprites (cond
-               (:rumbled state)   [ destroyed-nest destroyed-eggs hand ]
+               (:babies state)     [ destroyed-nest ( clickable destroyed-eggs :nooooo ) ]
+               (:rumbled state)    [ destroyed-nest destroyed-eggs (clickable hand :clearing) ]
                (not (:axe state)) [(clickable axe :get-axe) fallen]
                (not (:chopped state)) [(clickable fallen :chop-tree)]
                (:eggs state)    [louse-nest louse-eggs]
                (:chopped state) [(clickable louse-nest :lay-eggs)]
                :default [])
+    :update (cond
+              (:rumbled state) (set-state :babies :true)
+              :default #(%))
+
     :music "/audio/liceland.mp3"
-    :sound "/audio/insect.mp3"
     :back :head-west }
 
+   :nooooo
+   {:background "/images/forest7.png"
+    :description "They're gone... My children..."
+    :sound "/audio/insect.mp3"
+    :sprites [ destroyed-nest ( clickable destroyed-eggs :clearing ) ]
+    :music "/audio/liceland.mp3"
+    :back :head-west }
+   
    :get-axe
    {:background "/images/forest7.png"
     :description "Still sharp"
@@ -271,6 +289,12 @@
     :back :cliffside
     :forward :ear-canal}
 
+   :ear-canal
+   {:background "images/ear-canal.png"
+    :music "/audio/liceland2.mp3"
+    :sprites [ devilwig ]
+    :back :ear}
+   
    :head-east
    {:background "/images/forest4.png"
     :forward :heading-on

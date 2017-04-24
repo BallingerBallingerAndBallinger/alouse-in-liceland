@@ -9,4 +9,4 @@ To get an interactive development environment run:
 and open your browser at [localhost:3449](http://localhost:3449/).
 
 ## License
-Copyright © 2014 Andrew Ballinger
+Copyright © 2017 Andrew Ballinger

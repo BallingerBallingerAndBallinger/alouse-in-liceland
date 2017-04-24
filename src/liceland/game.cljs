@@ -289,7 +289,7 @@
     :music "audio/Liceland3.mp3"
     :sprites (cond
                (:rope state) [ well-no-rope (clickable caterpillar :caterpillar-1) ]
-               (:eggs state) [ well (clickable caterpillar :caterpillar-1)]
+               (:eggs state) [ (clickable well :get-rope) (clickable caterpillar :caterpillar-1)]
                :default [ well (clickable sign :brb) ])
     :back  :heading-on
     :forward :cliffside}
@@ -395,8 +395,10 @@
     :music "audio/Liceland3.mp3"
     :description "\"Oh dear, oh me, wherever might I be?\""
     :sprites (cond
-               (:rope state) [ well-no-rope (clickable caterpillar :well) ]
-               :default [ well (clickable caterpillar :caterpillar-2) ])
+               (and (:caterpillar-done state) (:rope state)) [ well-no-rope (clickable caterpillar :well) ]
+               (:caterpillar-done state) [ (clickable well :get-rope) (clickable caterpillar :well) ]
+               (:rope state) [ well-no-rope (clickable caterpillar :caterpillar-2) ]
+               :default [ (clickable well :get-rope) (clickable caterpillar :caterpillar-2) ])
     :forward :cliffside
     :back  :heading-on }
 
@@ -404,7 +406,9 @@
    {:background "images/forest2.png"
     :music "audio/Liceland3.mp3"
     :description "\"Way back I saw a funny hare. Surely I'm not near there.\""
-    :sprites [ well (clickable caterpillar :caterpillar-3) ]
+    :sprites (cond
+               (:rope state) [ well-no-rope (clickable caterpillar :caterpillar-3) ]
+               :default [ (clickable well :get-rope) (clickable caterpillar :caterpillar-3) ])
     :forward :cliffside
     :back  :heading-on }
 
@@ -412,7 +416,9 @@
    {:background "images/forest2.png"
     :music "audio/Liceland3.mp3"
     :description "\"Wherever would he sit! Neither hide nor hair could fit!\""
-    :sprites [ well (clickable caterpillar :caterpillar-4) ]
+    :sprites (cond
+               (:rope state) [ well-no-rope (clickable caterpillar :caterpillar-4) ]
+               :default [ (clickable well :get-rope) (clickable caterpillar :caterpillar-4) ])
     :forward :cliffside
     :back  :heading-on }
 
@@ -420,7 +426,9 @@
    {:background "images/forest2.png"
     :music "audio/Liceland3.mp3"
     :description "\"Ho! Mistress so little, lend an ear to hear my riddle?\""
-    :sprites [ well (clickable caterpillar :caterpillar-5) ]
+    :sprites (cond
+               (:rope state) [ well-no-rope (clickable caterpillar :caterpillar-5) ]
+               :default [ (clickable well :get-rope) (clickable caterpillar :caterpillar-5) ])
     :forward :cliffside
     :back  :heading-on }
 
@@ -428,18 +436,21 @@
    {:background "images/forest2.png"
     :music "audio/Liceland3.mp3"
     :description "\"What's at the bottom of this well? Tembling and Akakell!\""
-    :sprites [ well (clickable caterpillar :caterpillar-6) ]
+    :sprites (cond
+               (:rope state) [ well-no-rope (clickable caterpillar :well) ]
+               :default [ (clickable well :get-rope) (clickable caterpillar :well) ])
+    :update (set-state :caterpillar-done :true)
     :forward :cliffside
     :back  :heading-on }
 
-   :caterpillar-6
-   {:background "images/forest2.png"
-    :music "audio/Liceland3.mp3"
-    :description "\"Shame it broke. Must be an old rope.\""
-    :update (set-state :rope :true)
-    :sprites [ well-no-rope (clickable caterpillar :well) ]
-    :forward :cliffside
-    :back  :heading-on }})
+    :get-rope
+    {:background "images/forest2.png"
+     :music "audio/Liceland3.mp3"
+     :description "\"Shame it broke. Must be an old rope.\""
+     :sprites [ (clickable well-no-rope :well) (clickable caterpillar :well) ]
+     :update (set-state :rope :true)
+     :forward :cliffside
+     :back  :heading-on }})
 
 (defn mosquito-dialog [state] {
 

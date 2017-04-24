@@ -48,6 +48,11 @@
    :positionY (* 0.5 height)
    :image "/images/match.png"})
 
+(def sign
+  {:positionX 195
+   :positionY 132
+   :image "/images/well-sign.png"})
+
 (def destroyed-nest
   {:positionX (* 0.25 width)
    :positionY (* 0.5 height)
@@ -185,7 +190,7 @@
     :sprites (cond
                (:match state)      [ destroyed-nest ( clickable destroyed-eggs :nooooo ) (clickable gasoline :the-end) ]
                (:babies state)     [ destroyed-nest ( clickable destroyed-eggs :nooooo ) ]
-               (:rumbled state)    [ destroyed-nest destroyed-eggs (clickable hand :clearing) ]
+               (:rumbled state)    [ destroyed-nest (clickable destroyed-eggs :clearing) hand ]
                (not (:axe state)) [(clickable axe :get-axe) fallen]
                (not (:chopped state)) [(clickable fallen :chop-tree)]
                (:eggs state)    [louse-nest louse-eggs]
@@ -247,7 +252,7 @@
     :forward :well
     :left :well
     :back :head-east
-    :sprites [  (clickable larger-mosquito :heading-on-2) ]
+    :sprites [ (clickable larger-mosquito :heading-on-2) ]
     :music "/audio/liceland.mp3"
     :description "It just keeps going"}
 
@@ -276,10 +281,15 @@
     :sprites (cond
                (:rope state) [ well-no-rope (clickable caterpillar :caterpillar-1) ]
                (:eggs state) [ well (clickable caterpillar :caterpillar-1)]
-               :default [ well ])
+               :default [ well (clickable sign :brb) ])
     :back  :heading-on
     :forward :cliffside}
 
+   :brb
+   {:back :well
+    :music "/audio/Liceland3.mp3"
+    :background "/images/well-sign-click.png"}
+   
    :cliffside
    {:background "/images/ledge.png"
     :music "/audio/Liceland3.mp3"

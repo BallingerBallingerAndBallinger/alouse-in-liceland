@@ -74,9 +74,8 @@
 (defn forest [state]
   {:head-west
    {:background "/images/forest2.png"
-    :description "Nothing but "
+    :description "Nothing but trees"
     :music "/audio/liceland.mp3"
-    :sprites [ demonwig  ]
     :forward :clearing
     :right :head
     :left :head-east }
@@ -137,37 +136,76 @@
     :right :head-west
     :left :head}})
 
-(defn mosquito-dialog [state]
-  ;; Demonstrating how a base scene can be extended...  Imagine the possibilities.
-  (let [base (partial merge {:forward :heading-on-3
-                             :left :heading-on-3
-                             :back :heading-on
-                             :music "/audio/liceland.mp3"
-                             :background "/images/forest2.png"})]
+(defn mosquito-dialog [state] {
 
-    {:lookin-at-me (base {:sprites [ (clickable largest-mosquito :lookin-at-me-2) ]
-                          :description "\"Oh, another one\""})
+   :not-lookin-at-me
+   {:forward :heading-on-3
+    :left :heading-on-trees3
+    :back :heading-on
+    :music "/audio/liceland.mp3"
+    :background "/images/forest2.png"
+    :sprites [ (clickable largest-mosquito :heading-on-2) ]
+    :description "\"...\""}
+   
+   :lookin-at-me
+   {:forward :heading-on-3
+    :left :heading-on-trees3
+    :back :heading-on
+    :music "/audio/liceland.mp3"
+    :background "/images/forest2.png"
+    :sprites [ (clickable largest-mosquito :lookin-at-me-2) ]
+    :description "\"Oh, another one\""}
 
-     :not-lookin-at-me (base {:sprites [ (clickable largest-mosquito :heading-on-2) ]
-                              :description "\"...\""})
+   :lookin-at-me-2
+   {:forward :heading-on-3
+    :left :heading-on-trees3
+    :back :heading-on
+    :music "/audio/liceland.mp3"
+    :background "/images/forest2.png"
+    :sprites [ (clickable largest-mosquito :lookin-at-me-3) ]
+    :description "\"You're no different from the others. Leave me be.\""}
 
-     :lookin-at-me-2 (base {:sprites [ (clickable largest-mosquito :lookin-at-me-3) ]
-                            :description "\"You're no different from the others. Leave me be.\""})
-    
-     :lookin-at-me-3 (base {:sprites [ (clickable largest-mosquito :lookin-at-me-4) ]
-                            :description "\"I can't help one like you.\""})
-                        
-     :lookin-at-me-4 (base {:sprites [ (clickable largest-mosquito :lookin-at-me-5) ]
-                            :description "\"What would be the point? Most likely you'll spend what's left of your pitiful life on this tiny, dreary world, never knowing the great beyond.\""})
-                        
-     :lookin-at-me-5 (base {:sprites [ (clickable largest-mosquito :lookin-at-me-6) ]
-                            :description "\"Beyond?\""})
-                        
-     :lookin-at-me-6 (base {:sprites [ (clickable largest-mosquito :lookin-at-me-7) ]
-                            :description "\"Nothing for you there, unless you can fly. That's the only way to escape this wretched place.\""})
-                        
-     :lookin-at-me-7 (base {:sprites [ (clickable largest-mosquito :heading-on-2) ]
-                            :update #(assoc % :talked-to-mosq true)
-                            :description "\"Stop eyeing my wings, creep. You couldn't use them anyways.\""})}))
-    
+   :lookin-at-me-3
+   {:forward :heading-on-3
+    :left :heading-on-trees3
+    :back :heading-on
+    :music "/audio/liceland.mp3"
+    :background "/images/forest2.png"
+    :sprites [ (clickable largest-mosquito :lookin-at-me-4) ]
+    :description "\"I can't help one like you.\""}
+
+   :lookin-at-me-4
+   {:forward :heading-on-3
+    :left :heading-on-trees3
+    :back :heading-on
+    :music "/audio/liceland.mp3"
+    :background "/images/forest2.png"
+    :sprites [ (clickable largest-mosquito :lookin-at-me-5) ]
+    :description "\"What would be the point? Most likely you'll spend what's left of your pitiful life on this tiny, dreary world, never knowing the great beyond.\""}
+   
+   :lookin-at-me-5
+   {:forward :heading-on-3
+    :left :heading-on-trees3
+    :back :heading-on
+    :music "/audio/liceland.mp3"
+    :background "/images/forest2.png"
+    :sprites [ (clickable largest-mosquito :lookin-at-me-6) ]
+    :description "\"Beyond?\""}
+
+   :lookin-at-me-6
+   {:forward :heading-on-3
+    :left :heading-on-trees3
+    :back :heading-on
+    :music "/audio/liceland.mp3"
+    :background "/images/forest2.png":sprites [ (clickable largest-mosquito :lookin-at-me-7) ]
+    :description "\"Nothing for you there, unless you can fly. That's the only way to escape this wretched place.\""}
+
+   :lookin-at-me-7
+   {:forward :heading-on-3
+    :left :heading-on-trees3
+    :back :heading-on
+    :music "/audio/liceland.mp3"
+    :background "/images/forest2.png":sprites [ (clickable largest-mosquito :heading-on-2) ]
+    :update #(assoc % :talked-to-mosq true)
+    :description "\"Stop eyeing my wings, creep. You couldn't use them anyways.\""}})
 

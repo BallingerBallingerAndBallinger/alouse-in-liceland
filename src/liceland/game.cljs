@@ -34,8 +34,8 @@
 ;; Demonstrating one way of building things up from simpler pieces.
 (def larger-mosquito
   (cljs.core/merge mosquito
-                   {:positionX (* 0.4 width)
-                    :positionY (* 0.265 height)
+                   {:positionX (* 0.2 width)
+                    :positionY (* 0.45 height)
                     :scale 2 }))
 
 (def largest-mosquito
@@ -77,7 +77,7 @@
 
 (defn forest [state]
   {:head-west
-   {:background "/images/forest2.png"
+   {:background "/images/forest9.png"
     :description "Nothing but trees"
     :music "/audio/liceland.mp3"
     :forward :clearing
@@ -85,7 +85,7 @@
     :left :head-east }
 
    :clearing
-   {:background "/images/forest2.png"
+   {:background "/images/forest7.png"
     :description "A nice little clearing"
     :sprites (if (not (:axe state)) [(clickable axe :get-axe)])
     :music "/audio/liceland.mp3"
@@ -100,14 +100,14 @@
     :back :head-west}
 
    :head
-   {:background "/images/forest2.png"
+   {:background "/images/forest8.png"
     :description "A vast forest stretches as far as the eye can see"
     :music "/audio/liceland.mp3"
     :left :head-west
     :right :head-east }
 
    :heading-on
-   {:background "/images/forest2.png"
+   {:background "/images/forest5.png"
     :forward :heading-on-2
     :back :head-east
     :sprites [  (clickable larger-mosquito :heading-on-2) ]
@@ -119,12 +119,13 @@
     :forward :heading-on-3
     :back :heading-on
     :music "/audio/liceland.mp3"
-    :sprites [  (if (not (:talked-to-mosq state))
-                  (clickable largest-mosquito :lookin-at-me)
-                  (clickable largest-mosquito :not-lookin-at-me))]}
+    :sprites [ (cond
+                 (:talked-to-mosq state) (clickable largest-mosquito :not-lookin-at-me)
+                 (:mosq-one state) (clickable largest-mosquito :lookin-at-me-again)
+                 :default (clickable largest-mosquito :lookin-at-me))]}
 
    :heading-on-3
-   {:background "/images/forest2.png"
+   {:background "/images/forest5.png"
     :description "You've lost your way in the immensity"
     :back    :head-east
     :left    :head-east
@@ -132,7 +133,7 @@
     :forward :head-east }
 
    :head-east
-   {:background "/images/forest2.png"
+   {:background "/images/forest4.png"
     :forward :heading-on
     :music "/audio/liceland.mp3"
     :sprites [  (clickable mosquito :heading-on) ]
@@ -143,7 +144,7 @@
 
    :not-lookin-at-me
    {:forward :heading-on-3
-    :left :heading-on-trees3
+    :left :heading-on-3
     :back :heading-on
     :music "/audio/liceland.mp3"
     :background "/images/forest2.png"
@@ -152,7 +153,7 @@
    
    :lookin-at-me
    {:forward :heading-on-3
-    :left :heading-on-trees3
+    :left :heading-on-3
     :back :heading-on
     :music "/audio/liceland.mp3"
     :background "/images/forest2.png"
@@ -161,7 +162,7 @@
 
    :lookin-at-me-2
    {:forward :heading-on-3
-    :left :heading-on-trees3
+    :left :heading-on-3
     :back :heading-on
     :music "/audio/liceland.mp3"
     :background "/images/forest2.png"
@@ -170,7 +171,7 @@
 
    :lookin-at-me-3
    {:forward :heading-on-3
-    :left :heading-on-trees3
+    :left :heading-on-3
     :back :heading-on
     :music "/audio/liceland.mp3"
     :background "/images/forest2.png"
@@ -179,25 +180,26 @@
 
    :lookin-at-me-4
    {:forward :heading-on-3
-    :left :heading-on-trees3
+    :left :heading-on-3
     :back :heading-on
     :music "/audio/liceland.mp3"
     :background "/images/forest2.png"
-    :sprites [ (clickable largest-mosquito :lookin-at-me-4-2) ]
+    :update (set-state :mosq-one :true)
+    :sprites [ (clickable largest-mosquito :heading-on-2) ]
     :description "\"What would be the point?\"" }
 
-   :lookin-at-me-4-2
+   :lookin-at-me-again
    {:forward :heading-on-3
-    :left :heading-on-trees3
+    :left :heading-on-3
     :back :heading-on
     :music "/audio/liceland.mp3"
     :background "/images/forest2.png"
     :sprites [ (clickable largest-mosquito :lookin-at-me-5) ]
-    :description "\"You'll die on this tiny world\""}
+    :description "\"You'll die on this tiny world.\""}
    
    :lookin-at-me-5
    {:forward :heading-on-3
-    :left :heading-on-trees3
+    :left :heading-on-3
     :back :heading-on
     :music "/audio/liceland.mp3"
     :background "/images/forest2.png"
@@ -206,7 +208,7 @@
 
    :lookin-at-me-6
    {:forward :heading-on-3
-    :left :heading-on-trees3
+    :left :heading-on-3
     :back :heading-on
     :music "/audio/liceland.mp3"
     :background "/images/forest2.png":sprites [ (clickable largest-mosquito :lookin-at-me-7) ]
@@ -214,7 +216,7 @@
 
    :lookin-at-me-7
    {:forward :heading-on-3
-    :left :heading-on-trees3
+    :left :heading-on-3
     :back :heading-on
     :music "/audio/liceland.mp3"
     :background "/images/forest2.png":sprites [ (clickable largest-mosquito :heading-on-2) ]

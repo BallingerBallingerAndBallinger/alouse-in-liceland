@@ -38,6 +38,11 @@
    :scale 2
    :image "/images/hand.png"})
 
+(def gasoline
+  {:positionX (* 0.7 width)
+   :positionY (* 0.6 height)
+   :image "/images/gas.png"})
+
 (def match
   {:positionX (* 0.1 width)
    :positionY (* 0.5 height)
@@ -178,6 +183,7 @@
                    (:eggs state) "You will meet them soon. Wait and prepare."
                    (not (:chopped state)) "A nice little clearing")
     :sprites (cond
+               (:match state)      [ destroyed-nest ( clickable destroyed-eggs :nooooo ) (clickable gasoline :the-end) ]
                (:babies state)     [ destroyed-nest ( clickable destroyed-eggs :nooooo ) ]
                (:rumbled state)    [ destroyed-nest destroyed-eggs (clickable hand :clearing) ]
                (not (:axe state)) [(clickable axe :get-axe) fallen]
@@ -187,11 +193,14 @@
                :default [])
     :update (cond
               (:rumbled state) (set-state :babies :true)
-              :default #(%))
+              :default nil)
 
     :music "/audio/liceland.mp3"
     :back :head-west }
 
+   :unreachable-hand-loader
+   {:sprites [hand]}
+   
    :nooooo
    {:background "/images/forest7.png"
     :description "They're gone... My children..."
@@ -281,14 +290,14 @@
     :music "/audio/Liceland3.mp3"
     :description "An old rope is firmly tied around the trunk"
     :update (set-state :tied :true)
-    :sprites [ (clickable post :rumbling) rope ]
+    :sprites [ (clickable post :rumbling) (clickable rope :rumbling) ]
     :back :rumbling }
 
    :rumbling
    {:background "/images/ledge.png"
     :sound "/audio/scratch.mp3"
     :update (set-state :rumbled :true)
-    :sprites [ (clickable post :check) rope ]
+    :sprites [ (clickable post :check) (clickable rope :check) ]
     :back :well
     :description "A great rending sound echos through the forest"}
 
@@ -334,7 +343,19 @@
     :music "/audio/liceland2.mp3"
     :description "You know what you must do"
     :update (set-state :match :true)
+    :back :ear
     :sprites [ (clickable devilwig :devilwig-phrase) ] }
+
+   :the-end
+   {:background "/images/flames.png"
+    :forward     :credits
+    :backward    :credits
+    :left        :credits
+    :right       :credits
+    :description "Revenge..."}
+
+   :credits
+   {:background "/images/end-sign.png"}
    
    :head-east
    {:background "/images/forest4.png"

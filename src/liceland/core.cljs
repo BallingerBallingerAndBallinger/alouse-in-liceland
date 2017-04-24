@@ -218,7 +218,7 @@
   (draw-image (:background scene) 0 0)
   (if (:sprites scene)
     (doall (map draw-sprite (:sprites scene))))
-  (if (:description scene)
+  (if (and (:description scene) (not (nil? (:description scene))))
     (draw-text (:description scene))))
 
 (defn set-scene [scene]

@@ -43,7 +43,7 @@
 
 (def caterpillar
   {:positionX (* 0.60 width)
-   :positionY (* 0.017 height)
+   :positionY (* 0.12 height)
    :image "/images/Caterpillar.png"})
 
 (def demonwig
@@ -204,15 +204,52 @@
 
 (defn caterpillar-dialog [state]
   {
-   :caterpilar-1
+   :caterpillar-1
    {:background "images/forest2.png"
     :music "/audio/Liceland3.mp3"
+    :description "\"Oh dear, oh me, wherever might I be?\""
     :sprites (cond
-               (:eggs state) [ well (clickable caterpillar :caterpillar-1)]
-               :default [ well ])
-    :back  :heading-on
-    }})
+               (:rope state) [ well (clickable caterpillar :well) ]
+               :default [ well (clickable caterpillar :caterpillar-2) ])
+    :back  :heading-on }
 
+   :caterpillar-2
+   {:background "images/forest2.png"
+    :music "/audio/Liceland3.mp3"
+    :description "\"Way back I say a funny hare. Surely I'm not near there.\""
+    :sprites [ well (clickable caterpillar :caterpillar-3) ]
+    :back  :heading-on }
+
+   :caterpillar-3
+   {:background "images/forest2.png"
+    :music "/audio/Liceland3.mp3"
+    :description "\"Wherever would he sit! Neither hide nor hair could fit!\""
+    :sprites [ well (clickable caterpillar :caterpillar-4) ]
+    :back  :heading-on }
+
+   :caterpillar-4
+   {:background "images/forest2.png"
+    :music "/audio/Liceland3.mp3"
+    :description "\"Ho! Mistress so little, lend an ear to hear my riddle?\""
+    :sprites [ well (clickable caterpillar :caterpillar-5) ]
+    :back  :heading-on }
+
+   :caterpillar-5
+   {:background "images/forest2.png"
+    :music "/audio/Liceland3.mp3"
+    :description "\"What's at the bottom of this well? Tembling and Akakell!\""
+    :sprites [ well (clickable caterpillar :caterpillar-6) ]
+    :back  :heading-on }
+
+   :caterpillar-6
+   {:background "images/forest2.png"
+    :music "/audio/Liceland3.mp3"
+    :description "\"Shame it broke. Must be an old rope.\""
+    :update (set-state :rope :true)
+    :sprites [ well (clickable caterpillar :well) ]
+    :back  :heading-on }
+   
+  })
 
 (defn mosquito-dialog [state] {
 

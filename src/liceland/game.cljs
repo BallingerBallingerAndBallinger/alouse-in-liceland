@@ -22,21 +22,26 @@
   #(assoc % key value))
 
 (def devil-phrases
-  ["Are you sure you are hear?"
-   "I tend to wax on indefinitely."
-   "Let me know if you need a hand later."
-   "Cutting down trees isn't very echo-logical, is it?"
-   "The forest alouse few to find this cave."
-   "I'm not nearly as buzzy as you seem to be!"
-   "How many layers of eggs are there now?"
-   "Do you notice anything eary about this place?"
-   "I haven't a-loud word-play hear for fourty ears."])
+  ["\"Are you sure you are hear?\""
+   "\"I tend to wax on indefinitely.\""
+   "\"Let me know if you need a hand later.\""
+   "\"Cutting down trees isn't very echo-logical, is it?\""
+   "\"The forest alouse few to find this cave.\""
+   "\"I'm not nearly as buzzy as you seem to be!\""
+   "How many layers of eggs are there now?\""
+   "\"Do you notice anything eary about this place?\""
+   "\"I haven't a-loud word-play hear for fourty ears.\""])
 
 (def hand
   {:positionX (* 0 width)
    :positionY (* -1 height)
    :scale 2
    :image "/images/hand.png"})
+
+(def match
+  {:positionX (* 0.1 width)
+   :positionY (* 0.5 height)
+   :image "/images/match.png"})
 
 (def destroyed-nest
   {:positionX (* 0.25 width)
@@ -63,15 +68,21 @@
    :positionY (* 0.4 height)
    :image "/images/well.png"})
 
+(def well-no-rope
+  {:positionX (* 0.7 width)
+   :positionY (* 0.4 height)
+   :image "/images/well-no-rope.png"})
+
 (def post
   {:positionX 120
    :positionY 0
    :image "/images/post.png"})
 
 (def rope
-  {:positionX (* 0.1 width)
-   :positionY (* 0.2 height)
-   :image "/images/well.png"})
+  {:positionX 57
+   :positionY 81
+   :scale 0.5
+   :image "/images/rope.png"})
 
 (def fallen
   {:positionX (* 0.7 width)
@@ -115,9 +126,9 @@
 
 (defn cliffside-sprites [state]
   (cond
-    (:babies state) [ (clickable post :ear) rope ]
-    (:rumbled state) [ (clickable post :check) rope ]
-    (:tied state) [ (clickable post :rumbling) rope ]
+    (:babies state) [ (clickable post :ear) (clickable rope :ear) ]
+    (:rumbled state) [ (clickable post :check) (clickable rope :check) ]
+    (:tied state) [ (clickable post :rumbling) (clickable rope :rumbling) ]
     (:rope state)  [ (clickable post :roped) ]
     :default [ (clickable post :help) ]))
 
@@ -163,7 +174,7 @@
              (:rumbled state) "/audio/scratch.mp3"
              :default "/audio/insect.mp3")
     :description (cond
-                   (:rumbled state) nil 
+                   (:rumbled state) nil
                    (:eggs state) "You will meet them soon. Wait and prepare."
                    (not (:chopped state)) "A nice little clearing")
     :sprites (cond
@@ -252,6 +263,7 @@
    {:background "images/forest2.png"
     :music "/audio/Liceland3.mp3"
     :sprites (cond
+               (:rope state) [ well-no-rope (clickable caterpillar :caterpillar-1) ]
                (:eggs state) [ well (clickable caterpillar :caterpillar-1)]
                :default [ well ])
     :back  :heading-on
@@ -303,15 +315,26 @@
    :ear-canal
    {:background "images/ear-canal.png"
     :music "/audio/liceland2.mp3"
-    :sprites [ (clickable devilwig :devilwig-phrase) ]
+    :sprites (cond
+               (:match state) [ (clickable devilwig :devilwig-phrase) ]
+               :default [ (clickable match :get-match) (clickable devilwig :devilwig-phrase) ])
     :back :ear}
 
    :devilwig-phrase
    {:background "images/ear-canal.png"
     :description (get devil-phrases (rand-int (count devil-phrases)))
     :music "/audio/liceland2.mp3"
-    :sprites [ (clickable devilwig :devilwig-phrase) ]
+    :sprites (cond
+               (:match state) [ (clickable devilwig :ear-canal) ]
+               :default [ (clickable match :get-match) (clickable devilwig :ear-canal) ])
     :back :ear}
+
+   :get-match
+   {:background "images/ear-canal.png"
+    :music "/audio/liceland2.mp3"
+    :description "You know what you must do"
+    :update (set-state :match :true)
+    :sprites [ (clickable devilwig :devilwig-phrase) ] }
    
    :head-east
    {:background "/images/forest4.png"
@@ -328,7 +351,7 @@
     :music "/audio/Liceland3.mp3"
     :description "\"Oh dear, oh me, wherever might I be?\""
     :sprites (cond
-               (:rope state) [ well (clickable caterpillar :well) ]
+               (:rope state) [ well-no-rope (clickable caterpillar :well) ]
                :default [ well (clickable caterpillar :caterpillar-2) ])
     :forward :cliffside
     :back  :heading-on }
@@ -370,7 +393,7 @@
     :music "/audio/Liceland3.mp3"
     :description "\"Shame it broke. Must be an old rope.\""
     :update (set-state :rope :true)
-    :sprites [ well (clickable caterpillar :well) ]
+    :sprites [ well-no-rope (clickable caterpillar :well) ]
     :forward :cliffside
     :back  :heading-on }})
 

@@ -67,7 +67,7 @@
 (def largest-mosquito
   (cljs.core/merge mosquito
                    {:positionX (* 0.1 width)
-                    :positionY (* -0.5 height)
+                    :positionY (* -0.4 height)
                     :scale 8}))
 
 (def axe
@@ -167,7 +167,7 @@
     :description "It just keeps going"}
 
    :heading-on-2
-   {:background "/images/forest2.png"
+   {:background "/images/forest11.png"
     :forward :heading-on-3
     :back :heading-on
     :music "/audio/liceland.mp3"
@@ -216,7 +216,7 @@
    :caterpillar-2
    {:background "images/forest2.png"
     :music "/audio/Liceland3.mp3"
-    :description "\"Way back I say a funny hare. Surely I'm not near there.\""
+    :description "\"Way back I saw a funny hare. Surely I'm not near there.\""
     :sprites [ well (clickable caterpillar :caterpillar-3) ]
     :back  :heading-on }
 
@@ -258,7 +258,7 @@
     :left :heading-on-3
     :back :heading-on
     :music "/audio/liceland.mp3"
-    :background "/images/forest2.png"
+    :background "/images/forest11.png"
     :sprites [ (clickable largest-mosquito :heading-on-2) ]
     :description "\"...\""}
    
@@ -267,7 +267,7 @@
     :left :heading-on-3
     :back :heading-on
     :music "/audio/liceland.mp3"
-    :background "/images/forest2.png"
+    :background "/images/forest11.png"
     :sprites [ (clickable largest-mosquito :lookin-at-me-2) ]
     :description "\"Oh, another one\""}
 
@@ -276,7 +276,7 @@
     :left :heading-on-3
     :back :heading-on
     :music "/audio/liceland.mp3"
-    :background "/images/forest2.png"
+    :background "/images/forest11.png"
     :sprites [ (clickable largest-mosquito :lookin-at-me-3) ]
     :description "\"You're no different from the others. Leave me be.\""}
 
@@ -285,7 +285,7 @@
     :left :heading-on-3
     :back :heading-on
     :music "/audio/liceland.mp3"
-    :background "/images/forest2.png"
+    :background "/images/forest11.png"
     :sprites [ (clickable largest-mosquito :lookin-at-me-4) ]
     :description "\"I can't help one like you.\""}
 
@@ -294,7 +294,7 @@
     :left :heading-on-3
     :back :heading-on
     :music "/audio/liceland.mp3"
-    :background "/images/forest2.png"
+    :background "/images/forest11.png"
     :update (set-state :mosq-one :true)
     :sprites [ (clickable largest-mosquito :heading-on-2) ]
     :description "\"What would be the point?\"" }
@@ -304,7 +304,7 @@
     :left :heading-on-3
     :back :heading-on
     :music "/audio/liceland.mp3"
-    :background "/images/forest2.png"
+    :background "/images/forest11.png"
     :sprites [ (clickable largest-mosquito :lookin-at-me-5) ]
     :description "\"You'll die on this tiny world.\""}
    
@@ -313,7 +313,7 @@
     :left :heading-on-3
     :back :heading-on
     :music "/audio/liceland.mp3"
-    :background "/images/forest2.png"
+    :background "/images/forest11.png"
     :sprites [ (clickable largest-mosquito :lookin-at-me-6) ]
     :description "\"Beyond?\""}
 
@@ -322,7 +322,7 @@
     :left :heading-on-3
     :back :heading-on
     :music "/audio/liceland.mp3"
-    :background "/images/forest2.png":sprites [ (clickable largest-mosquito :lookin-at-me-7) ]
+    :background "/images/forest11.png":sprites [ (clickable largest-mosquito :lookin-at-me-7) ]
     :description "\"Nothing for you there\""}
 
    :lookin-at-me-7
@@ -330,7 +330,7 @@
     :left :heading-on-3
     :back :heading-on
     :music "/audio/liceland.mp3"
-    :background "/images/forest2.png":sprites [ (clickable largest-mosquito :heading-on-2) ]
+    :background "/images/forest11.png":sprites [ (clickable largest-mosquito :heading-on-2) ]
     :update (set-state :talked-to-mosq true)
     :description "\"Stop eyeing my wings, creep.\""}})
 

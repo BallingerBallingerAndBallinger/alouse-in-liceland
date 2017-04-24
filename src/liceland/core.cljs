@@ -154,7 +154,7 @@
 
 (defn color-pixel-fn [pixels x y color]
   (let [dest (aget pixels (int (+ x (* width y))))]
-    (if (and (> x 0) (> y 0) (< x width) (< y height))
+    (if (and (> x -1) (> y -1) (< x width) (< y height))
       (aset pixels (+ x (* width y)) (alpha-blend dest color)))))
 
 (defn compute-source-pixel [img scale idx]

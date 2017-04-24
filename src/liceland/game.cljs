@@ -20,6 +20,21 @@
 (defn set-state [key value]
   #(assoc % key value))
 
+(def louse-nest
+  {:positionX (* 0.25 width)
+   :positionY (* 0.5 height)
+   :image "/images/louse-nest.png"})
+
+(def louse-eggs
+  {:positionX (* 0.25 width)
+   :positionY (* 0.5 height)
+   :image "/images/louse-eggs.png"})
+
+(def fallen
+  {:positionX (* 0.7 width)
+   :positionY (* 0.3 height)
+   :image "/images/fallen.png"})
+
 (def demonwig
   {:positionX (* 0.3 width)
    :positionY (* 0.1 height)
@@ -86,19 +101,43 @@
 
    :clearing
    {:background "/images/forest7.png"
-    :description "A nice little clearing"
-    :sprites (if (not (:axe state)) [(clickable axe :get-axe)])
+    :description (cond
+                   (:eggs state) "You will meet them soon. Wait and prepare."
+                   (not (:chopped state)) "A nice little clearing")
+    :sprites (cond
+               (not (:axe state)) [(clickable axe :get-axe) fallen]
+               (not (:chopped state)) [(clickable fallen :chop-tree)]
+               (:eggs state)    [louse-nest louse-eggs]
+               (:chopped state) [(clickable louse-nest :lay-eggs)]
+               :default [])
     :music "/audio/liceland.mp3"
     :sound "/audio/insect.mp3"
     :back :head-west }
 
    :get-axe
-   {:background "/images/forest2.png"
+   {:background "/images/forest7.png"
     :description "Still sharp"
     :music "/audio/liceland.mp3"
+    :sprites [(clickable fallen :chop-tree)]
     :update (set-state :axe true)
     :back :head-west}
 
+   :chop-tree
+   {:background "/images/forest7.png"
+    :music "/audio/liceland.mp3"
+    :sound "/audio/chopping.mp3"
+    :update (set-state :chopped :true)
+    :sprites [(clickable louse-nest :lay-eggs)]
+    :back :head-west}
+
+   :lay-eggs
+   {:background "/images/forest7.png"
+    :music "/audio/liceland.mp3"
+    :description "Your dear children are safe and warm"
+    :update (set-state :eggs :true)
+    :sprites [louse-nest louse-eggs]
+    :back :head-west}
+   
    :head
    {:background "/images/forest8.png"
     :description "A vast forest stretches as far as the eye can see"
@@ -126,7 +165,8 @@
 
    :heading-on-3
    {:background "/images/forest5.png"
-    :description "You've lost your way in the immensity"
+    :description "You've lost your way"
+    :music   "/audio/liceland.mp3"
     :back    :head-east
     :left    :head-east
     :right   :head-east

@@ -24,8 +24,8 @@
 
 (def images
   (distinct (concat
-             (map #(:image %) (mapcat #(:sprites %) (vals (scenes @current-state))))
-             (map #(:background %) (vals (scenes @current-state))))))
+             (remove nil? (map #(:image %) (mapcat #(:sprites %) (vals (scenes @current-state)))))
+             (remove nil? (map #(:background %) (vals (scenes @current-state)))))))
 
 (def sounds
   (distinct (concat

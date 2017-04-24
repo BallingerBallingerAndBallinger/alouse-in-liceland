@@ -58,6 +58,7 @@
 ;; forward:     A symbol pointing to a scene to jump to when forward is clicked
 ;; back:        A symbol pointing to a scene to jump to when back is clicked
 ;; sprites:     An array of sprites present in the scene
+;; sound:       A sound to play when you enter a scene
 ;; update:      A function to update the state when a scene is entered.... AND FOR THE LOVE OF GOD
 
 ;; Be careful with the state...
@@ -88,6 +89,7 @@
     :description "A nice little clearing"
     :sprites (if (not (:axe state)) [(clickable axe :get-axe)])
     :music "/audio/liceland.mp3"
+    :sound "/audio/insect.mp3"
     :back :head-west }
 
    :get-axe
@@ -101,7 +103,6 @@
    {:background "/images/forest2.png"
     :description "A vast forest stretches as far as the eye can see"
     :music "/audio/liceland.mp3"
-    :sprites [  ]
     :left :head-west
     :right :head-east }
 
@@ -182,8 +183,17 @@
     :back :heading-on
     :music "/audio/liceland.mp3"
     :background "/images/forest2.png"
+    :sprites [ (clickable largest-mosquito :lookin-at-me-4-2) ]
+    :description "\"What would be the point?\"" }
+
+   :lookin-at-me-4-2
+   {:forward :heading-on-3
+    :left :heading-on-trees3
+    :back :heading-on
+    :music "/audio/liceland.mp3"
+    :background "/images/forest2.png"
     :sprites [ (clickable largest-mosquito :lookin-at-me-5) ]
-    :description "\"What would be the point? Most likely you'll spend what's left of your pitiful life on this tiny, dreary world, never knowing the great beyond.\""}
+    :description "\"You'll die on this tiny world\""}
    
    :lookin-at-me-5
    {:forward :heading-on-3
@@ -200,7 +210,7 @@
     :back :heading-on
     :music "/audio/liceland.mp3"
     :background "/images/forest2.png":sprites [ (clickable largest-mosquito :lookin-at-me-7) ]
-    :description "\"Nothing for you there, unless you can fly. That's the only way to escape this wretched place.\""}
+    :description "\"Nothing for you there\""}
 
    :lookin-at-me-7
    {:forward :heading-on-3
@@ -209,5 +219,5 @@
     :music "/audio/liceland.mp3"
     :background "/images/forest2.png":sprites [ (clickable largest-mosquito :heading-on-2) ]
     :update (set-state :talked-to-mosq true)
-    :description "\"Stop eyeing my wings, creep. You couldn't use them anyways.\""}})
+    :description "\"Stop eyeing my wings, creep.\""}})
 

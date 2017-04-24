@@ -30,6 +30,7 @@
 (def sounds
   (distinct (concat
              (remove nil? (map #(:sound %) (mapcat #(:sprites %) (vals (scenes @current-state)))))
+             (remove nil? (map #(:sound %) (vals (scenes @current-state))))
              (remove nil? (map #(:music %) (vals (scenes @current-state)))))))
 
 (declare on-assets-loaded)
@@ -210,6 +211,8 @@
   (if (:update scene) (swap! current-state (:update scene)))
   (if (:music scene)
     (sounds/start-loaded-audio-loop (:music scene)))
+  (if (:sound scene)
+    (sounds/start-loaded-audio (:sound scene)))
   (draw #(.fill % 0xfffff0ff))
   (draw-image (:background scene) 0 0)
   (if (:sprites scene)

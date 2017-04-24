@@ -17,6 +17,9 @@
 (defn clickable [sprite target]
   (cljs.core/merge sprite {:click target}))
 
+(defn set-state [key value]
+  #(assoc % key value))
+
 (def demonwig
   {:positionX (* 0.3 width)
    :positionY (* 0.1 height)
@@ -91,7 +94,7 @@
    {:background "/images/forest2.png"
     :description "Still sharp"
     :music "/audio/liceland.mp3"
-    :update #(assoc % :axe true)
+    :update (set-state :axe true)
     :back :head-west}
 
    :head
@@ -125,7 +128,6 @@
     :back    :head-east
     :left    :head-east
     :right   :head-east
-    :sprites [  ]
     :forward :head-east }
 
    :head-east
@@ -206,6 +208,6 @@
     :back :heading-on
     :music "/audio/liceland.mp3"
     :background "/images/forest2.png":sprites [ (clickable largest-mosquito :heading-on-2) ]
-    :update #(assoc % :talked-to-mosq true)
+    :update (set-state :talked-to-mosq true)
     :description "\"Stop eyeing my wings, creep. You couldn't use them anyways.\""}})
 

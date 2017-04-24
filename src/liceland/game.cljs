@@ -198,14 +198,16 @@
     :music "/audio/liceland.mp3"
     :back :head-west }
 
-   :unreachable-hand-loader
-   {:sprites [hand]}
+   :unreachable-sprite-loader
+   {:sprites [hand gasoline]}
    
    :nooooo
    {:background "/images/forest7.png"
     :description "They're gone... My children..."
     :sound "/audio/insect.mp3"
-    :sprites [ destroyed-nest ( clickable destroyed-eggs :clearing ) ]
+    :sprites (cond
+               (:match state) [ destroyed-nest ( clickable destroyed-eggs :nooooo ) (clickable gasoline :the-end) ]
+               :default [ destroyed-nest ( clickable destroyed-eggs :clearing ) ])
     :music "/audio/liceland.mp3"
     :back :head-west }
    
@@ -318,7 +320,9 @@
    :ear
    {:background "images/Ear.png"
     :music "/audio/liceland2.mp3"
-    :back :cliffside
+    :back (cond
+            (state :match) :clearing
+            :default :cliffside)
     :forward :ear-canal}
 
    :ear-canal

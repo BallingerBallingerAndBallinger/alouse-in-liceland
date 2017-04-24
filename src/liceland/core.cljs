@@ -1,6 +1,6 @@
 (ns liceland.core
   (:require-macros
-   [cljs.core.async.macros :refer [go]])
+   [cljs.core.async.macros :refer [go go-loop]])
   (:require
    [liceland.sprites :as sprites]
    [liceland.audio :as sounds]
@@ -33,10 +33,12 @@
              (remove nil? (map #(:music %) (vals (scenes @current-state)))))))
 
 (declare on-assets-loaded)
-(defn load-assets [] (go
-                       (<! (merge (map sprites/load images)))
-                       (<! (merge (map sounds/load sounds)))
-                       (on-assets-loaded)))
+(defn load-assets []
+  (let [resources (merge [(merge (map sprites/load images))
+                          (merge (map sounds/load sounds))])]
+    (go
+      (while (<! resources) nil)
+      (on-assets-loaded))))
 
 (defonce initial-load (load-assets))
 

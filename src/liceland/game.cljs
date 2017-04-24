@@ -72,55 +72,70 @@
          (forest state)))
 
 (defn forest [state]
-  {:head-west {:background "/images/forest2.png"
-               :description "Nothing but "
-               :music "/audio/liceland.mp3"
-               :sprites [ demonwig  ]
-               :forward :clearing
-               :right :head
-               :left :head-east }
-   :clearing {:background "/images/forest2.png"
-              :description "A nice little clearing"
-              :sprites (if (not (:axe state)) [(clickable axe :get-axe)])
-              :music "/audio/liceland.mp3"
-              :back :head-west }
-   :get-axe {:background "/images/forest2.png"
-             :description "Still sharp"
-             :music "/audio/liceland.mp3"
-             :update #(assoc % :axe true)
-             :back :head-west}
-   :head {:background "/images/forest2.png"
-          :description "A vast forest stretches as far as the eye can see"
-          :music "/audio/liceland.mp3"
-          :sprites [  ]
-          :left :head-west
-          :right :head-east }
-   :heading-on {:background "/images/forest2.png"
-                :forward :heading-on-2
-                :back :head-east
-                :sprites [  (clickable larger-mosquito :heading-on-2) ]
-                :music "/audio/liceland.mp3"
-                :description "It just keeps going"}
-   :heading-on-2 {:background "/images/forest2.png"
-                  :forward :heading-on-3
-                  :back :heading-on
-                  :music "/audio/liceland.mp3"
-                  :sprites [  (if (not (:talked-to-mosq state))
-                                     (clickable largest-mosquito :lookin-at-me)
-                                     (clickable largest-mosquito :not-lookin-at-me))]}
-   :heading-on-3 {:background "/images/forest2.png"
-                  :description "You've lost your way in the immensity"
-                  :back    :head-east
-                  :left    :head-east
-                  :right   :head-east
-                  :sprites [  ]
-                  :forward :head-east }
-   :head-east {:background "/images/forest2.png"
-               :forward :heading-on
-               :music "/audio/liceland.mp3"
-               :sprites [  (clickable mosquito :heading-on) ]
-               :right :head-west
-               :left :head}})
+  {:head-west
+   {:background "/images/forest2.png"
+    :description "Nothing but "
+    :music "/audio/liceland.mp3"
+    :sprites [ demonwig  ]
+    :forward :clearing
+    :right :head
+    :left :head-east }
+
+   :clearing
+   {:background "/images/forest2.png"
+    :description "A nice little clearing"
+    :sprites (if (not (:axe state)) [(clickable axe :get-axe)])
+    :music "/audio/liceland.mp3"
+    :back :head-west }
+
+   :get-axe
+   {:background "/images/forest2.png"
+    :description "Still sharp"
+    :music "/audio/liceland.mp3"
+    :update #(assoc % :axe true)
+    :back :head-west}
+
+   :head
+   {:background "/images/forest2.png"
+    :description "A vast forest stretches as far as the eye can see"
+    :music "/audio/liceland.mp3"
+    :sprites [  ]
+    :left :head-west
+    :right :head-east }
+
+   :heading-on
+   {:background "/images/forest2.png"
+    :forward :heading-on-2
+    :back :head-east
+    :sprites [  (clickable larger-mosquito :heading-on-2) ]
+    :music "/audio/liceland.mp3"
+    :description "It just keeps going"}
+
+   :heading-on-2
+   {:background "/images/forest2.png"
+    :forward :heading-on-3
+    :back :heading-on
+    :music "/audio/liceland.mp3"
+    :sprites [  (if (not (:talked-to-mosq state))
+                  (clickable largest-mosquito :lookin-at-me)
+                  (clickable largest-mosquito :not-lookin-at-me))]}
+
+   :heading-on-3
+   {:background "/images/forest2.png"
+    :description "You've lost your way in the immensity"
+    :back    :head-east
+    :left    :head-east
+    :right   :head-east
+    :sprites [  ]
+    :forward :head-east }
+
+   :head-east
+   {:background "/images/forest2.png"
+    :forward :heading-on
+    :music "/audio/liceland.mp3"
+    :sprites [  (clickable mosquito :heading-on) ]
+    :right :head-west
+    :left :head}})
 
 (defn mosquito-dialog [state]
   ;; Demonstrating how a base scene can be extended...  Imagine the possibilities.

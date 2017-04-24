@@ -22,6 +22,7 @@
         (do
           (let [img (js/Image.)]
             (aset img "onload" #(do ((cache-image sym img)
+                                     (.log js/console (str "Image loaded " (name sym)))
                                      (return-image-and-close sym out))))
             (aset img "src" url))))
     out))

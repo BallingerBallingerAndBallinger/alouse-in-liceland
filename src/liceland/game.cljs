@@ -21,6 +21,17 @@
 (defn set-state [key value]
   #(assoc % key value))
 
+(def devil-phrases
+  ["Are you sure you are hear?"
+   "I tend to wax on indefinitely."
+   "Let me know if you need a hand later."
+   "Cutting down trees isn't very echo-logical, is it?"
+   "The forest alouse few to find this cave."
+   "I'm not nearly as buzzy as you seem to be!"
+   "How many layers of eggs are there now?"
+   "Do you notice anything eary about this place?"
+   "I haven't a-loud word-play hear for fourty ears."])
+
 (def hand
   {:positionX (* 0 width)
    :positionY (* -1 height)
@@ -73,8 +84,8 @@
    :image "/images/Caterpillar.png"})
 
 (def devilwig
-  {:positionX (* 0.28 width)
-   :positionY (* 0.2 height)
+  {:positionX (* 0.24 width)
+   :positionY (* 0.12 height)
    :scale 3
    :image "/images/devilwig.png"})
 
@@ -292,7 +303,14 @@
    :ear-canal
    {:background "images/ear-canal.png"
     :music "/audio/liceland2.mp3"
-    :sprites [ devilwig ]
+    :sprites [ (clickable devilwig :devilwig-phrase) ]
+    :back :ear}
+
+   :devilwig-phrase
+   {:background "images/ear-canal.png"
+    :description (get devil-phrases (rand-int (count devil-phrases)))
+    :music "/audio/liceland2.mp3"
+    :sprites [ (clickable devilwig :devilwig-phrase) ]
     :back :ear}
    
    :head-east

@@ -71,8 +71,8 @@
   (aset app "onmousemove"
         (fn [e]
           (this-as element
-            (let [x (* (/ width (.-width e)) (- (.-pageX e) (.-offsetLeft element)))
-                  y (* (/ height (.-height e)) (- (.-pageY e) (.-offsetTop element)))
+            (let [x (* (/ width  (or (.-scrollWidth app)  (.-offsetWidth app)))  (- (.-pageX e) (.-offsetLeft element)))
+                  y (* (/ height (or (.-scrollHeight app) (.-offsetHeight app))) (- (.-pageY e) (.-offsetTop element)))
                   sprite (clicked-sprite-in-scene @current-scene x y)]
               (cond
                 (and (< x (* width 0.2))
@@ -101,8 +101,9 @@
   (aset app "onmousedown"
         (fn [e]
           (this-as element
-            (let [x (- (.-pageX e) (.-offsetLeft element))
-                  y (- (.-pageY e) (.-offsetTop element))
+
+            (let [x (* (/ width  (or (.-scrollWidth app)  (.-offsetWidth app)))  (- (.-pageX e) (.-offsetLeft element)))
+                  y (* (/ height (or (.-scrollHeight app) (.-offsetHeight app))) (- (.-pageY e) (.-offsetTop element)))
                   sprite (clicked-sprite-in-scene @current-scene x y)]
             (cond
               (and (< x (* width 0.2))

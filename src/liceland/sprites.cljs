@@ -15,9 +15,9 @@
       (close! out)))
 
 (defn load [url]
+  (.log js/console (str "Loading image for " url))
   (let [out (chan)
         sym (symbol url)]
-    (.log js/console (str "Loading image for " (name sym)))
     (if (sym @image-cache) (return-image-and-close sym out)
         (do
           (let [img (js/Image.)]

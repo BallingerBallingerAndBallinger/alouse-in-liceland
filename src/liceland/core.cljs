@@ -229,7 +229,7 @@
 
 (defn on-assets-loaded []
   (if (nil? @current-scene)
-    (set-scene :head)
+    (set-scene :title)
     (set-scene @current-scene-tag)))
 
 (defn on-js-reload []

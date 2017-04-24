@@ -43,6 +43,11 @@
    :positionY (* 0.6 height)
    :image "images/gas.png"})
 
+(def title
+  {:positionX 0
+   :positionY 0
+   :image "images/title-screen.png"})
+
 (def match
   {:positionX (* 0.1 width)
    :positionY (* 0.5 height)
@@ -178,6 +183,10 @@
     :right :head
     :left :head-east }
 
+   :title
+   {:background "images/title-screen.png"
+    :sprites [ (clickable title :head) ]}
+   
    :clearing
    {:background "images/forest7.png"
     :sound (cond

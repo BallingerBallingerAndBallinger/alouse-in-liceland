@@ -8,26 +8,26 @@ document, body, #app {
 }
 
 .left-cursor {
-    cursor: url(/images/left.png), auto;
+    cursor: url(../images/left.png), auto;
 }
 
 .right-cursor {
-    cursor: url(/images/right.png), auto;
+    cursor: url(../images/right.png), auto;
 }
 
 .norm-cursor {
-    cursor: url(/images/norm.png), auto;
+    cursor: url(../images/norm.png), auto;
 }
 
 .forward-cursor {
-    cursor: url(/images/forward.png), auto;
+    cursor: url(../images/forward.png), auto;
 }
 
 .click-cursor {
-    cursor: url(/images/click.png), auto;
+    cursor: url(../images/click.png), auto;
 }
 
 .back-cursor {
-    cursor: url(/images/back.png), auto;
+    cursor: url(../images/back.png), auto;
 }
 
